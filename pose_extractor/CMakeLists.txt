@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.10)
 project(pose_extractor)
 
+set (OpenCV_DIR ~/dev/thesis/opencv-install/build/)
+
+
 find_package(PythonInterp 3.5 REQUIRED)
 find_package(PythonLibs 3.5 REQUIRED)
 
