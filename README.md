@@ -1,4 +1,4 @@
-# Spcoaæ Robotics Gaze Detection
+# Social Robotics Gaze Detection
 
 Real-time 3D Multi-person Pose Estimation is based on https://github.com/Daniil-Osokin/lightweight-human-pose-estimation-3d-demo.pytorch/tree/master
 
