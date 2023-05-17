@@ -1,9 +1,9 @@
 # Social Robotics Gaze Detection
 
 ## Todo
-[ ] calculate gaze from 3D poses
-[ ] detect when people are looking at the camera
-[ ] determine which people are looking at each other (assumption is that they are probably at conversation, and the robot should not drive between them, but drive around)
+- [ ] calculate gaze from 3D poses
+- [ ] detect when people are looking at the camera
+- [ ] determine which people are looking at each other (assumption is that they are probably at conversation, and the robot should not drive between them, but drive around)
 
 Real-time 3D Multi-person Pose Estimation is based on https://github.com/Daniil-Osokin/lightweight-human-pose-estimation-3d-demo.pytorch/tree/master
 
