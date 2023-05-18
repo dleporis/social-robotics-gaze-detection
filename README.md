@@ -41,8 +41,9 @@ This repository contains 3D multi-person pose estimation demo in PyTorch. Intel 
 sudo apt install python3-virtualenv
 ```
 2. Create virtual environment:
+```
 virtualenv -p python3 myvenv
-
+```
 3. Activate virtual environment:
 ```
 source  myvenv/bin/activate
