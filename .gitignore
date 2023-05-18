@@ -5,3 +5,4 @@ models/human-pose-estimation-3d.pth
 lightweight-human-pose-estimation-3d-demo.pytorch
 tmp/
 build/
+opencv/

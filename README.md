@@ -34,15 +34,32 @@ This repository contains 3D multi-person pose estimation demo in PyTorch. Intel 
 > [Optional] [NVIDIA TensorRT](https://docs.nvidia.com/deeplearning/tensorrt/install-guide/index.html) for fast inference on Jetson.
 
 ## Prerequisites
-1. Install requirements:
+1. Install virtual environment package:
+```
+sudo apt install python3-virtualenv
+```
+2. Create virtual environment:
+virtualenv -p python3 myvenv
+
+3. Activate virtual environment:
+```
+source  myvenv/bin/activate
+
+```
+4. Install requirements:
 ```
 pip install -r requirements.txt
+
 ```
-2. Build `pose_extractor` module:
+5. Install OpenCV 4 for C++:
+```
+bash scripts/install_cpp_opencv.sh
+```
+6. Build `pose_extractor` module:
 ```
 python setup.py build_ext
 ```
-3. Add build folder to `PYTHONPATH`:
+7. Add build folder to `PYTHONPATH`:
 ```
 export PYTHONPATH=pose_extractor/build/:$PYTHONPATH
 ```
@@ -51,29 +68,47 @@ export PYTHONPATH=pose_extractor/build/:$PYTHONPATH
 
 Pre-trained model is available at [Google Drive](https://drive.google.com/file/d/1niBUbUecPhKt3GyeDNukobL4OQ3jqssH/view?usp=sharing).
 
+Get it by running:
+```
+wget -O models/human-pose-estimation-3d.pth "https://drive.google.com/uc?export=download&id=1niBUbUecPhKt3GyeDNukobL4OQ3jqssH"
+
+```
+
 ## Running
 
 To run the demo, pass path to the pre-trained checkpoint and camera id (or path to video file):
 ```
-python demo.py --model human-pose-estimation-3d.pth --video 0
+python demo.py --model models/human-pose-estimation-3d.pth --video 0
 ```
 > Camera can capture scene under different view angles, so for correct scene visualization, please pass camera extrinsics and focal length with `--extrinsics` and `--fx` options correspondingly (extrinsics sample format can be found in data folder). In case no camera parameters provided, demo will use the default ones.
 
 ## Inference with OpenVINO <a name="inference-openvino"/>
 
 To run with OpenVINO, it is necessary to convert checkpoint to OpenVINO format:
-1. Set OpenVINO environment variables:
-    ```
-	source <OpenVINO_INSTALL_DIR>/bin/setupvars.sh
-	```
-2. Convert checkpoint to ONNX:
-    ```
-	python scripts/convert_to_onnx.py --checkpoint-path human-pose-estimation-3d.pth
-	```
+
+1. Install OpenVINO (in virtualenv)
+```
+pip install openvino-dev[pytorch,ONNX]==2022.3.0
+```
+
+2. Set OpenVINO environment variables (only needed when built from source):
+```
+source <OpenVINO_INSTALL_DIR>/bin/setupvars.sh
+```
+
+3. Convert checkpoint to ONNX:
+```
+python scripts/convert_to_onnx.py --checkpoint-path human-pose-estimation-3d.pth
+```
+
 3. Convert to OpenVINO format:
-    ```
-	python <OpenVINO_INSTALL_DIR>/deployment_tools/model_optimizer/mo.py --input_model human-pose-estimation-3d.onnx --input=data --mean_values=data[128.0,128.0,128.0] --scale_values=data[255.0,255.0,255.0] --output=features,heatmaps,pafs
-	```
+```
+python myvenv/lib/python3.10/site-packages/openvino/tools/mo/mo.py --input_model human-pose-estimation-3d.onnx --input=data --mean_values=data[128.0,128.0,128.0] --scale_values=data[255.0,255.0,255.0] --output=features,heatmaps,pafs
+```
+In case OpenVINO is built from source:
+```
+python <OpenVINO_INSTALL_DIR>/deployment_tools/model_optimizer/mo.py --input_model human-pose-estimation-3d.onnx --input=data --mean_values=data[128.0,128.0,128.0] --scale_values=data[255.0,255.0,255.0] --output=features,heatmaps,pafs
+```
 
 To run the demo with OpenVINO inference, pass `--use-openvino` option and specify device to infer on:
 ```

@@ -1,4 +1,4 @@
-# Install script for directory: /home/damian/dev/thesis/lightweight-human-pose-estimation-3d-demo.pytorch/pose_extractor
+# Install script for directory: /home/dle/dev/src/thesis/social-robotics-gaze-detection/pose_extractor
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -50,5 +50,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/damian/dev/thesis/lightweight-human-pose-estimation-3d-demo.pytorch/pose_extractor/build/tmp/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/dle/dev/src/thesis/social-robotics-gaze-detection/pose_extractor/build/tmp/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
