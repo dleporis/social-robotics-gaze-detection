@@ -81,7 +81,7 @@ wget -O human-pose-estimation-3d.pth "https://drive.google.com/uc?export=downloa
 
 To run the demo, pass path to the pre-trained checkpoint and camera id (or path to video file):
 ```
-python demo.py human-pose-estimation-3d.pth --video 0
+python demo.py --model human-pose-estimation-3d.pth --video 0
 ```
 For video files, use
 ```
