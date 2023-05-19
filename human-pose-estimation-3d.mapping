@@ -1,0 +1,983 @@
+<?xml version="1.0"?>
+<mapping>
+	<map>
+		<framework name="data" output_port_id="data" />
+		<IR name="data" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/model/model.0/model.0.0/Conv" output_port_id="/model/model.0/model.0.0/Conv_output_0" />
+		<IR name="/model/model.0/model.0.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/model/model.0/model.0.2/Relu" output_port_id="/model/model.0/model.0.2/Relu_output_0" />
+		<IR name="/model/model.0/model.0.2/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="/model/model.1/model.1.0/Conv" output_port_id="/model/model.1/model.1.0/Conv_output_0" />
+		<IR name="/model/model.1/model.1.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/model/model.1/model.1.2/Relu" output_port_id="/model/model.1/model.1.2/Relu_output_0" />
+		<IR name="/model/model.1/model.1.2/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="onnx::Conv_637" output_port_id="onnx::Conv_637" />
+		<IR name="onnx::Conv_637" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/model/model.1/model.1.3/Conv" output_port_id="/model/model.1/model.1.3/Conv_output_0" />
+		<IR name="/model/model.1/model.1.3/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/model/model.1/model.1.5/Relu" output_port_id="/model/model.1/model.1.5/Relu_output_0" />
+		<IR name="/model/model.1/model.1.5/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="/model/model.2/model.2.0/Conv" output_port_id="/model/model.2/model.2.0/Conv_output_0" />
+		<IR name="/model/model.2/model.2.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/model/model.2/model.2.2/Relu" output_port_id="/model/model.2/model.2.2/Relu_output_0" />
+		<IR name="/model/model.2/model.2.2/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="onnx::Conv_643" output_port_id="onnx::Conv_643" />
+		<IR name="onnx::Conv_643" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/model/model.2/model.2.3/Conv" output_port_id="/model/model.2/model.2.3/Conv_output_0" />
+		<IR name="/model/model.2/model.2.3/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/model/model.2/model.2.5/Relu" output_port_id="/model/model.2/model.2.5/Relu_output_0" />
+		<IR name="/model/model.2/model.2.5/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="/model/model.3/model.3.0/Conv" output_port_id="/model/model.3/model.3.0/Conv_output_0" />
+		<IR name="/model/model.3/model.3.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/model/model.3/model.3.2/Relu" output_port_id="/model/model.3/model.3.2/Relu_output_0" />
+		<IR name="/model/model.3/model.3.2/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="onnx::Conv_649" output_port_id="onnx::Conv_649" />
+		<IR name="onnx::Conv_649" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/model/model.3/model.3.3/Conv" output_port_id="/model/model.3/model.3.3/Conv_output_0" />
+		<IR name="/model/model.3/model.3.3/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/model/model.3/model.3.5/Relu" output_port_id="/model/model.3/model.3.5/Relu_output_0" />
+		<IR name="/model/model.3/model.3.5/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="/model/model.4/model.4.0/Conv" output_port_id="/model/model.4/model.4.0/Conv_output_0" />
+		<IR name="/model/model.4/model.4.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/model/model.4/model.4.2/Relu" output_port_id="/model/model.4/model.4.2/Relu_output_0" />
+		<IR name="/model/model.4/model.4.2/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="onnx::Conv_655" output_port_id="onnx::Conv_655" />
+		<IR name="onnx::Conv_655" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/model/model.4/model.4.3/Conv" output_port_id="/model/model.4/model.4.3/Conv_output_0" />
+		<IR name="/model/model.4/model.4.3/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/model/model.4/model.4.5/Relu" output_port_id="/model/model.4/model.4.5/Relu_output_0" />
+		<IR name="/model/model.4/model.4.5/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="/model/model.5/model.5.0/Conv" output_port_id="/model/model.5/model.5.0/Conv_output_0" />
+		<IR name="/model/model.5/model.5.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/model/model.5/model.5.2/Relu" output_port_id="/model/model.5/model.5.2/Relu_output_0" />
+		<IR name="/model/model.5/model.5.2/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="onnx::Conv_661" output_port_id="onnx::Conv_661" />
+		<IR name="onnx::Conv_661" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/model/model.5/model.5.3/Conv" output_port_id="/model/model.5/model.5.3/Conv_output_0" />
+		<IR name="/model/model.5/model.5.3/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/model/model.5/model.5.5/Relu" output_port_id="/model/model.5/model.5.5/Relu_output_0" />
+		<IR name="/model/model.5/model.5.5/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="/model/model.6/model.6.0/Conv" output_port_id="/model/model.6/model.6.0/Conv_output_0" />
+		<IR name="/model/model.6/model.6.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/model/model.6/model.6.2/Relu" output_port_id="/model/model.6/model.6.2/Relu_output_0" />
+		<IR name="/model/model.6/model.6.2/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="onnx::Conv_667" output_port_id="onnx::Conv_667" />
+		<IR name="onnx::Conv_667" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/model/model.6/model.6.3/Conv" output_port_id="/model/model.6/model.6.3/Conv_output_0" />
+		<IR name="/model/model.6/model.6.3/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/model/model.6/model.6.5/Relu" output_port_id="/model/model.6/model.6.5/Relu_output_0" />
+		<IR name="/model/model.6/model.6.5/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="/model/model.7/model.7.0/Conv" output_port_id="/model/model.7/model.7.0/Conv_output_0" />
+		<IR name="/model/model.7/model.7.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/model/model.7/model.7.2/Relu" output_port_id="/model/model.7/model.7.2/Relu_output_0" />
+		<IR name="/model/model.7/model.7.2/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="onnx::Conv_673" output_port_id="onnx::Conv_673" />
+		<IR name="onnx::Conv_673" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/model/model.7/model.7.3/Conv" output_port_id="/model/model.7/model.7.3/Conv_output_0" />
+		<IR name="/model/model.7/model.7.3/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/model/model.7/model.7.5/Relu" output_port_id="/model/model.7/model.7.5/Relu_output_0" />
+		<IR name="/model/model.7/model.7.5/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="/model/model.8/model.8.0/Conv" output_port_id="/model/model.8/model.8.0/Conv_output_0" />
+		<IR name="/model/model.8/model.8.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/model/model.8/model.8.2/Relu" output_port_id="/model/model.8/model.8.2/Relu_output_0" />
+		<IR name="/model/model.8/model.8.2/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="onnx::Conv_679" output_port_id="onnx::Conv_679" />
+		<IR name="onnx::Conv_679" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/model/model.8/model.8.3/Conv" output_port_id="/model/model.8/model.8.3/Conv_output_0" />
+		<IR name="/model/model.8/model.8.3/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/model/model.8/model.8.5/Relu" output_port_id="/model/model.8/model.8.5/Relu_output_0" />
+		<IR name="/model/model.8/model.8.5/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="/model/model.9/model.9.0/Conv" output_port_id="/model/model.9/model.9.0/Conv_output_0" />
+		<IR name="/model/model.9/model.9.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/model/model.9/model.9.2/Relu" output_port_id="/model/model.9/model.9.2/Relu_output_0" />
+		<IR name="/model/model.9/model.9.2/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="onnx::Conv_685" output_port_id="onnx::Conv_685" />
+		<IR name="onnx::Conv_685" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/model/model.9/model.9.3/Conv" output_port_id="/model/model.9/model.9.3/Conv_output_0" />
+		<IR name="/model/model.9/model.9.3/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/model/model.9/model.9.5/Relu" output_port_id="/model/model.9/model.9.5/Relu_output_0" />
+		<IR name="/model/model.9/model.9.5/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="/model/model.10/model.10.0/Conv" output_port_id="/model/model.10/model.10.0/Conv_output_0" />
+		<IR name="/model/model.10/model.10.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/model/model.10/model.10.2/Relu" output_port_id="/model/model.10/model.10.2/Relu_output_0" />
+		<IR name="/model/model.10/model.10.2/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="onnx::Conv_691" output_port_id="onnx::Conv_691" />
+		<IR name="onnx::Conv_691" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/model/model.10/model.10.3/Conv" output_port_id="/model/model.10/model.10.3/Conv_output_0" />
+		<IR name="/model/model.10/model.10.3/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/model/model.10/model.10.5/Relu" output_port_id="/model/model.10/model.10.5/Relu_output_0" />
+		<IR name="/model/model.10/model.10.5/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="/model/model.11/model.11.0/Conv" output_port_id="/model/model.11/model.11.0/Conv_output_0" />
+		<IR name="/model/model.11/model.11.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/model/model.11/model.11.2/Relu" output_port_id="/model/model.11/model.11.2/Relu_output_0" />
+		<IR name="/model/model.11/model.11.2/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="onnx::Conv_697" output_port_id="onnx::Conv_697" />
+		<IR name="onnx::Conv_697" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/model/model.11/model.11.3/Conv" output_port_id="/model/model.11/model.11.3/Conv_output_0" />
+		<IR name="/model/model.11/model.11.3/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/model/model.11/model.11.5/Relu" output_port_id="/model/model.11/model.11.5/Relu_output_0" />
+		<IR name="/model/model.11/model.11.5/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="cpm.align.0.weight" output_port_id="cpm.align.0.weight" />
+		<IR name="cpm.align.0.weight" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/cpm/align/align.0/Conv" output_port_id="/cpm/align/align.0/Conv_output_0" />
+		<IR name="/cpm/align/align.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/cpm/align/align.1/Relu" output_port_id="/cpm/align/align.1/Relu_output_0" />
+		<IR name="/cpm/align/align.1/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="/cpm/trunk/trunk.0/trunk.0.0/Conv" output_port_id="/cpm/trunk/trunk.0/trunk.0.0/Conv_output_0" />
+		<IR name="/cpm/trunk/trunk.0/trunk.0.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/cpm/trunk/trunk.0/trunk.0.1/Elu" output_port_id="/cpm/trunk/trunk.0/trunk.0.1/Elu_output_0" />
+		<IR name="/cpm/trunk/trunk.0/trunk.0.1/Elu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="cpm.trunk.0.2.weight" output_port_id="cpm.trunk.0.2.weight" />
+		<IR name="cpm.trunk.0.2.weight" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/cpm/trunk/trunk.0/trunk.0.2/Conv" output_port_id="/cpm/trunk/trunk.0/trunk.0.2/Conv_output_0" />
+		<IR name="/cpm/trunk/trunk.0/trunk.0.2/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/cpm/trunk/trunk.0/trunk.0.3/Elu" output_port_id="/cpm/trunk/trunk.0/trunk.0.3/Elu_output_0" />
+		<IR name="/cpm/trunk/trunk.0/trunk.0.3/Elu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="/cpm/trunk/trunk.1/trunk.1.0/Conv" output_port_id="/cpm/trunk/trunk.1/trunk.1.0/Conv_output_0" />
+		<IR name="/cpm/trunk/trunk.1/trunk.1.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/cpm/trunk/trunk.1/trunk.1.1/Elu" output_port_id="/cpm/trunk/trunk.1/trunk.1.1/Elu_output_0" />
+		<IR name="/cpm/trunk/trunk.1/trunk.1.1/Elu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="cpm.trunk.1.2.weight" output_port_id="cpm.trunk.1.2.weight" />
+		<IR name="cpm.trunk.1.2.weight" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/cpm/trunk/trunk.1/trunk.1.2/Conv" output_port_id="/cpm/trunk/trunk.1/trunk.1.2/Conv_output_0" />
+		<IR name="/cpm/trunk/trunk.1/trunk.1.2/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/cpm/trunk/trunk.1/trunk.1.3/Elu" output_port_id="/cpm/trunk/trunk.1/trunk.1.3/Elu_output_0" />
+		<IR name="/cpm/trunk/trunk.1/trunk.1.3/Elu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="/cpm/trunk/trunk.2/trunk.2.0/Conv" output_port_id="/cpm/trunk/trunk.2/trunk.2.0/Conv_output_0" />
+		<IR name="/cpm/trunk/trunk.2/trunk.2.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/cpm/trunk/trunk.2/trunk.2.1/Elu" output_port_id="/cpm/trunk/trunk.2/trunk.2.1/Elu_output_0" />
+		<IR name="/cpm/trunk/trunk.2/trunk.2.1/Elu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="cpm.trunk.2.2.weight" output_port_id="cpm.trunk.2.2.weight" />
+		<IR name="cpm.trunk.2.2.weight" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/cpm/trunk/trunk.2/trunk.2.2/Conv" output_port_id="/cpm/trunk/trunk.2/trunk.2.2/Conv_output_0" />
+		<IR name="/cpm/trunk/trunk.2/trunk.2.2/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/cpm/trunk/trunk.2/trunk.2.3/Elu" output_port_id="/cpm/trunk/trunk.2/trunk.2.3/Elu_output_0" />
+		<IR name="/cpm/trunk/trunk.2/trunk.2.3/Elu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="/cpm/Add" output_port_id="/cpm/Add_output_0" />
+		<IR name="/cpm/Add" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="cpm.conv.0.weight" output_port_id="cpm.conv.0.weight" />
+		<IR name="cpm.conv.0.weight" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/cpm/conv/conv.0/Conv" output_port_id="/cpm/conv/conv.0/Conv_output_0" />
+		<IR name="/cpm/conv/conv.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/cpm/conv/conv.1/Relu" output_port_id="/cpm/conv/conv.1/Relu_output_0" />
+		<IR name="/cpm/conv/conv.1/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="initial_stage.trunk.0.0.weight" output_port_id="initial_stage.trunk.0.0.weight" />
+		<IR name="initial_stage.trunk.0.0.weight" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/initial_stage/trunk/trunk.0/trunk.0.0/Conv" output_port_id="/initial_stage/trunk/trunk.0/trunk.0.0/Conv_output_0" />
+		<IR name="/initial_stage/trunk/trunk.0/trunk.0.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/initial_stage/trunk/trunk.0/trunk.0.1/Relu" output_port_id="/initial_stage/trunk/trunk.0/trunk.0.1/Relu_output_0" />
+		<IR name="/initial_stage/trunk/trunk.0/trunk.0.1/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="initial_stage.trunk.1.0.weight" output_port_id="initial_stage.trunk.1.0.weight" />
+		<IR name="initial_stage.trunk.1.0.weight" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/initial_stage/trunk/trunk.1/trunk.1.0/Conv" output_port_id="/initial_stage/trunk/trunk.1/trunk.1.0/Conv_output_0" />
+		<IR name="/initial_stage/trunk/trunk.1/trunk.1.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/initial_stage/trunk/trunk.1/trunk.1.1/Relu" output_port_id="/initial_stage/trunk/trunk.1/trunk.1.1/Relu_output_0" />
+		<IR name="/initial_stage/trunk/trunk.1/trunk.1.1/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="initial_stage.trunk.2.0.weight" output_port_id="initial_stage.trunk.2.0.weight" />
+		<IR name="initial_stage.trunk.2.0.weight" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/initial_stage/trunk/trunk.2/trunk.2.0/Conv" output_port_id="/initial_stage/trunk/trunk.2/trunk.2.0/Conv_output_0" />
+		<IR name="/initial_stage/trunk/trunk.2/trunk.2.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/initial_stage/trunk/trunk.2/trunk.2.1/Relu" output_port_id="/initial_stage/trunk/trunk.2/trunk.2.1/Relu_output_0" />
+		<IR name="/initial_stage/trunk/trunk.2/trunk.2.1/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="initial_stage.heatmaps.0.0.weight" output_port_id="initial_stage.heatmaps.0.0.weight" />
+		<IR name="initial_stage.heatmaps.0.0.weight" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/initial_stage/heatmaps/heatmaps.0/heatmaps.0.0/Conv" output_port_id="/initial_stage/heatmaps/heatmaps.0/heatmaps.0.0/Conv_output_0" />
+		<IR name="/initial_stage/heatmaps/heatmaps.0/heatmaps.0.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/initial_stage/heatmaps/heatmaps.0/heatmaps.0.1/Relu" output_port_id="/initial_stage/heatmaps/heatmaps.0/heatmaps.0.1/Relu_output_0" />
+		<IR name="/initial_stage/heatmaps/heatmaps.0/heatmaps.0.1/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="initial_stage.heatmaps.1.0.weight" output_port_id="initial_stage.heatmaps.1.0.weight" />
+		<IR name="initial_stage.heatmaps.1.0.weight" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/initial_stage/heatmaps/heatmaps.1/heatmaps.1.0/Conv" output_port_id="/initial_stage/heatmaps/heatmaps.1/heatmaps.1.0/Conv_output_0" />
+		<IR name="/initial_stage/heatmaps/heatmaps.1/heatmaps.1.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="initial_stage.pafs.0.0.weight" output_port_id="initial_stage.pafs.0.0.weight" />
+		<IR name="initial_stage.pafs.0.0.weight" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/initial_stage/pafs/pafs.0/pafs.0.0/Conv" output_port_id="/initial_stage/pafs/pafs.0/pafs.0.0/Conv_output_0" />
+		<IR name="/initial_stage/pafs/pafs.0/pafs.0.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/initial_stage/pafs/pafs.0/pafs.0.1/Relu" output_port_id="/initial_stage/pafs/pafs.0/pafs.0.1/Relu_output_0" />
+		<IR name="/initial_stage/pafs/pafs.0/pafs.0.1/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="initial_stage.pafs.1.0.weight" output_port_id="initial_stage.pafs.1.0.weight" />
+		<IR name="initial_stage.pafs.1.0.weight" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/initial_stage/pafs/pafs.1/pafs.1.0/Conv" output_port_id="/initial_stage/pafs/pafs.1/pafs.1.0/Conv_output_0" />
+		<IR name="/initial_stage/pafs/pafs.1/pafs.1.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/Concat" output_port_id="/Concat_output_0" />
+		<IR name="/Concat" output_port_id="3" />
+	</map>
+	<map>
+		<framework name="refinement_stages.0.trunk.0.initial.0.weight" output_port_id="refinement_stages.0.trunk.0.initial.0.weight" />
+		<IR name="refinement_stages.0.trunk.0.initial.0.weight" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/refinement_stages.0/trunk/trunk.0/initial/initial.0/Conv" output_port_id="/refinement_stages.0/trunk/trunk.0/initial/initial.0/Conv_output_0" />
+		<IR name="/refinement_stages.0/trunk/trunk.0/initial/initial.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/refinement_stages.0/trunk/trunk.0/initial/initial.1/Relu" output_port_id="/refinement_stages.0/trunk/trunk.0/initial/initial.1/Relu_output_0" />
+		<IR name="/refinement_stages.0/trunk/trunk.0/initial/initial.1/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="onnx::Conv_700" output_port_id="onnx::Conv_700" />
+		<IR name="onnx::Conv_700" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/refinement_stages.0/trunk/trunk.0/trunk/trunk.0/trunk.0.0/Conv" output_port_id="/refinement_stages.0/trunk/trunk.0/trunk/trunk.0/trunk.0.0/Conv_output_0" />
+		<IR name="/refinement_stages.0/trunk/trunk.0/trunk/trunk.0/trunk.0.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/refinement_stages.0/trunk/trunk.0/trunk/trunk.0/trunk.0.2/Relu" output_port_id="/refinement_stages.0/trunk/trunk.0/trunk/trunk.0/trunk.0.2/Relu_output_0" />
+		<IR name="/refinement_stages.0/trunk/trunk.0/trunk/trunk.0/trunk.0.2/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="onnx::Conv_703" output_port_id="onnx::Conv_703" />
+		<IR name="onnx::Conv_703" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/refinement_stages.0/trunk/trunk.0/trunk/trunk.1/trunk.1.0/Conv" output_port_id="/refinement_stages.0/trunk/trunk.0/trunk/trunk.1/trunk.1.0/Conv_output_0" />
+		<IR name="/refinement_stages.0/trunk/trunk.0/trunk/trunk.1/trunk.1.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/refinement_stages.0/trunk/trunk.0/trunk/trunk.1/trunk.1.2/Relu" output_port_id="/refinement_stages.0/trunk/trunk.0/trunk/trunk.1/trunk.1.2/Relu_output_0" />
+		<IR name="/refinement_stages.0/trunk/trunk.0/trunk/trunk.1/trunk.1.2/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="/refinement_stages.0/trunk/trunk.0/Add" output_port_id="/refinement_stages.0/trunk/trunk.0/Add_output_0" />
+		<IR name="/refinement_stages.0/trunk/trunk.0/Add" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="refinement_stages.0.trunk.1.initial.0.weight" output_port_id="refinement_stages.0.trunk.1.initial.0.weight" />
+		<IR name="refinement_stages.0.trunk.1.initial.0.weight" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/refinement_stages.0/trunk/trunk.1/initial/initial.0/Conv" output_port_id="/refinement_stages.0/trunk/trunk.1/initial/initial.0/Conv_output_0" />
+		<IR name="/refinement_stages.0/trunk/trunk.1/initial/initial.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/refinement_stages.0/trunk/trunk.1/initial/initial.1/Relu" output_port_id="/refinement_stages.0/trunk/trunk.1/initial/initial.1/Relu_output_0" />
+		<IR name="/refinement_stages.0/trunk/trunk.1/initial/initial.1/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="onnx::Conv_706" output_port_id="onnx::Conv_706" />
+		<IR name="onnx::Conv_706" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/refinement_stages.0/trunk/trunk.1/trunk/trunk.0/trunk.0.0/Conv" output_port_id="/refinement_stages.0/trunk/trunk.1/trunk/trunk.0/trunk.0.0/Conv_output_0" />
+		<IR name="/refinement_stages.0/trunk/trunk.1/trunk/trunk.0/trunk.0.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/refinement_stages.0/trunk/trunk.1/trunk/trunk.0/trunk.0.2/Relu" output_port_id="/refinement_stages.0/trunk/trunk.1/trunk/trunk.0/trunk.0.2/Relu_output_0" />
+		<IR name="/refinement_stages.0/trunk/trunk.1/trunk/trunk.0/trunk.0.2/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="onnx::Conv_709" output_port_id="onnx::Conv_709" />
+		<IR name="onnx::Conv_709" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/refinement_stages.0/trunk/trunk.1/trunk/trunk.1/trunk.1.0/Conv" output_port_id="/refinement_stages.0/trunk/trunk.1/trunk/trunk.1/trunk.1.0/Conv_output_0" />
+		<IR name="/refinement_stages.0/trunk/trunk.1/trunk/trunk.1/trunk.1.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/refinement_stages.0/trunk/trunk.1/trunk/trunk.1/trunk.1.2/Relu" output_port_id="/refinement_stages.0/trunk/trunk.1/trunk/trunk.1/trunk.1.2/Relu_output_0" />
+		<IR name="/refinement_stages.0/trunk/trunk.1/trunk/trunk.1/trunk.1.2/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="/refinement_stages.0/trunk/trunk.1/Add" output_port_id="/refinement_stages.0/trunk/trunk.1/Add_output_0" />
+		<IR name="/refinement_stages.0/trunk/trunk.1/Add" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="refinement_stages.0.trunk.2.initial.0.weight" output_port_id="refinement_stages.0.trunk.2.initial.0.weight" />
+		<IR name="refinement_stages.0.trunk.2.initial.0.weight" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/refinement_stages.0/trunk/trunk.2/initial/initial.0/Conv" output_port_id="/refinement_stages.0/trunk/trunk.2/initial/initial.0/Conv_output_0" />
+		<IR name="/refinement_stages.0/trunk/trunk.2/initial/initial.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/refinement_stages.0/trunk/trunk.2/initial/initial.1/Relu" output_port_id="/refinement_stages.0/trunk/trunk.2/initial/initial.1/Relu_output_0" />
+		<IR name="/refinement_stages.0/trunk/trunk.2/initial/initial.1/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="onnx::Conv_712" output_port_id="onnx::Conv_712" />
+		<IR name="onnx::Conv_712" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/refinement_stages.0/trunk/trunk.2/trunk/trunk.0/trunk.0.0/Conv" output_port_id="/refinement_stages.0/trunk/trunk.2/trunk/trunk.0/trunk.0.0/Conv_output_0" />
+		<IR name="/refinement_stages.0/trunk/trunk.2/trunk/trunk.0/trunk.0.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/refinement_stages.0/trunk/trunk.2/trunk/trunk.0/trunk.0.2/Relu" output_port_id="/refinement_stages.0/trunk/trunk.2/trunk/trunk.0/trunk.0.2/Relu_output_0" />
+		<IR name="/refinement_stages.0/trunk/trunk.2/trunk/trunk.0/trunk.0.2/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="onnx::Conv_715" output_port_id="onnx::Conv_715" />
+		<IR name="onnx::Conv_715" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/refinement_stages.0/trunk/trunk.2/trunk/trunk.1/trunk.1.0/Conv" output_port_id="/refinement_stages.0/trunk/trunk.2/trunk/trunk.1/trunk.1.0/Conv_output_0" />
+		<IR name="/refinement_stages.0/trunk/trunk.2/trunk/trunk.1/trunk.1.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/refinement_stages.0/trunk/trunk.2/trunk/trunk.1/trunk.1.2/Relu" output_port_id="/refinement_stages.0/trunk/trunk.2/trunk/trunk.1/trunk.1.2/Relu_output_0" />
+		<IR name="/refinement_stages.0/trunk/trunk.2/trunk/trunk.1/trunk.1.2/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="/refinement_stages.0/trunk/trunk.2/Add" output_port_id="/refinement_stages.0/trunk/trunk.2/Add_output_0" />
+		<IR name="/refinement_stages.0/trunk/trunk.2/Add" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="refinement_stages.0.trunk.3.initial.0.weight" output_port_id="refinement_stages.0.trunk.3.initial.0.weight" />
+		<IR name="refinement_stages.0.trunk.3.initial.0.weight" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/refinement_stages.0/trunk/trunk.3/initial/initial.0/Conv" output_port_id="/refinement_stages.0/trunk/trunk.3/initial/initial.0/Conv_output_0" />
+		<IR name="/refinement_stages.0/trunk/trunk.3/initial/initial.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/refinement_stages.0/trunk/trunk.3/initial/initial.1/Relu" output_port_id="/refinement_stages.0/trunk/trunk.3/initial/initial.1/Relu_output_0" />
+		<IR name="/refinement_stages.0/trunk/trunk.3/initial/initial.1/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="onnx::Conv_718" output_port_id="onnx::Conv_718" />
+		<IR name="onnx::Conv_718" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/refinement_stages.0/trunk/trunk.3/trunk/trunk.0/trunk.0.0/Conv" output_port_id="/refinement_stages.0/trunk/trunk.3/trunk/trunk.0/trunk.0.0/Conv_output_0" />
+		<IR name="/refinement_stages.0/trunk/trunk.3/trunk/trunk.0/trunk.0.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/refinement_stages.0/trunk/trunk.3/trunk/trunk.0/trunk.0.2/Relu" output_port_id="/refinement_stages.0/trunk/trunk.3/trunk/trunk.0/trunk.0.2/Relu_output_0" />
+		<IR name="/refinement_stages.0/trunk/trunk.3/trunk/trunk.0/trunk.0.2/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="onnx::Conv_721" output_port_id="onnx::Conv_721" />
+		<IR name="onnx::Conv_721" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/refinement_stages.0/trunk/trunk.3/trunk/trunk.1/trunk.1.0/Conv" output_port_id="/refinement_stages.0/trunk/trunk.3/trunk/trunk.1/trunk.1.0/Conv_output_0" />
+		<IR name="/refinement_stages.0/trunk/trunk.3/trunk/trunk.1/trunk.1.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/refinement_stages.0/trunk/trunk.3/trunk/trunk.1/trunk.1.2/Relu" output_port_id="/refinement_stages.0/trunk/trunk.3/trunk/trunk.1/trunk.1.2/Relu_output_0" />
+		<IR name="/refinement_stages.0/trunk/trunk.3/trunk/trunk.1/trunk.1.2/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="/refinement_stages.0/trunk/trunk.3/Add" output_port_id="/refinement_stages.0/trunk/trunk.3/Add_output_0" />
+		<IR name="/refinement_stages.0/trunk/trunk.3/Add" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="refinement_stages.0.trunk.4.initial.0.weight" output_port_id="refinement_stages.0.trunk.4.initial.0.weight" />
+		<IR name="refinement_stages.0.trunk.4.initial.0.weight" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/refinement_stages.0/trunk/trunk.4/initial/initial.0/Conv" output_port_id="/refinement_stages.0/trunk/trunk.4/initial/initial.0/Conv_output_0" />
+		<IR name="/refinement_stages.0/trunk/trunk.4/initial/initial.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/refinement_stages.0/trunk/trunk.4/initial/initial.1/Relu" output_port_id="/refinement_stages.0/trunk/trunk.4/initial/initial.1/Relu_output_0" />
+		<IR name="/refinement_stages.0/trunk/trunk.4/initial/initial.1/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="onnx::Conv_724" output_port_id="onnx::Conv_724" />
+		<IR name="onnx::Conv_724" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/refinement_stages.0/trunk/trunk.4/trunk/trunk.0/trunk.0.0/Conv" output_port_id="/refinement_stages.0/trunk/trunk.4/trunk/trunk.0/trunk.0.0/Conv_output_0" />
+		<IR name="/refinement_stages.0/trunk/trunk.4/trunk/trunk.0/trunk.0.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/refinement_stages.0/trunk/trunk.4/trunk/trunk.0/trunk.0.2/Relu" output_port_id="/refinement_stages.0/trunk/trunk.4/trunk/trunk.0/trunk.0.2/Relu_output_0" />
+		<IR name="/refinement_stages.0/trunk/trunk.4/trunk/trunk.0/trunk.0.2/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="onnx::Conv_727" output_port_id="onnx::Conv_727" />
+		<IR name="onnx::Conv_727" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/refinement_stages.0/trunk/trunk.4/trunk/trunk.1/trunk.1.0/Conv" output_port_id="/refinement_stages.0/trunk/trunk.4/trunk/trunk.1/trunk.1.0/Conv_output_0" />
+		<IR name="/refinement_stages.0/trunk/trunk.4/trunk/trunk.1/trunk.1.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/refinement_stages.0/trunk/trunk.4/trunk/trunk.1/trunk.1.2/Relu" output_port_id="/refinement_stages.0/trunk/trunk.4/trunk/trunk.1/trunk.1.2/Relu_output_0" />
+		<IR name="/refinement_stages.0/trunk/trunk.4/trunk/trunk.1/trunk.1.2/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="/refinement_stages.0/trunk/trunk.4/Add" output_port_id="/refinement_stages.0/trunk/trunk.4/Add_output_0" />
+		<IR name="/refinement_stages.0/trunk/trunk.4/Add" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="refinement_stages.0.pafs.0.0.weight" output_port_id="refinement_stages.0.pafs.0.0.weight" />
+		<IR name="refinement_stages.0.pafs.0.0.weight" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/refinement_stages.0/pafs/pafs.0/pafs.0.0/Conv" output_port_id="/refinement_stages.0/pafs/pafs.0/pafs.0.0/Conv_output_0" />
+		<IR name="/refinement_stages.0/pafs/pafs.0/pafs.0.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/refinement_stages.0/pafs/pafs.0/pafs.0.1/Relu" output_port_id="/refinement_stages.0/pafs/pafs.0/pafs.0.1/Relu_output_0" />
+		<IR name="/refinement_stages.0/pafs/pafs.0/pafs.0.1/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="refinement_stages.0.pafs.1.0.weight" output_port_id="refinement_stages.0.pafs.1.0.weight" />
+		<IR name="refinement_stages.0.pafs.1.0.weight" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/refinement_stages.0/pafs/pafs.1/pafs.1.0/Conv" output_port_id="/refinement_stages.0/pafs/pafs.1/pafs.1.0/Conv_output_0" />
+		<IR name="/refinement_stages.0/pafs/pafs.1/pafs.1.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="fake_conv_pafs.weight" output_port_id="fake_conv_pafs.weight" />
+		<IR name="fake_conv_pafs.weight" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/fake_conv_pafs/Conv" output_port_id="/fake_conv_pafs/Conv_output_0" />
+		<IR name="/fake_conv_pafs/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="pafs" output_port_id="pafs" />
+		<IR name="pafs" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="refinement_stages.0.heatmaps.0.0.weight" output_port_id="refinement_stages.0.heatmaps.0.0.weight" />
+		<IR name="refinement_stages.0.heatmaps.0.0.weight" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/refinement_stages.0/heatmaps/heatmaps.0/heatmaps.0.0/Conv" output_port_id="/refinement_stages.0/heatmaps/heatmaps.0/heatmaps.0.0/Conv_output_0" />
+		<IR name="/refinement_stages.0/heatmaps/heatmaps.0/heatmaps.0.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/refinement_stages.0/heatmaps/heatmaps.0/heatmaps.0.1/Relu" output_port_id="/refinement_stages.0/heatmaps/heatmaps.0/heatmaps.0.1/Relu_output_0" />
+		<IR name="/refinement_stages.0/heatmaps/heatmaps.0/heatmaps.0.1/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="refinement_stages.0.heatmaps.1.0.weight" output_port_id="refinement_stages.0.heatmaps.1.0.weight" />
+		<IR name="refinement_stages.0.heatmaps.1.0.weight" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/refinement_stages.0/heatmaps/heatmaps.1/heatmaps.1.0/Conv" output_port_id="/refinement_stages.0/heatmaps/heatmaps.1/heatmaps.1.0/Conv_output_0" />
+		<IR name="/refinement_stages.0/heatmaps/heatmaps.1/heatmaps.1.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="fake_conv_heatmaps.weight" output_port_id="fake_conv_heatmaps.weight" />
+		<IR name="fake_conv_heatmaps.weight" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/fake_conv_heatmaps/Conv" output_port_id="/fake_conv_heatmaps/Conv_output_0" />
+		<IR name="/fake_conv_heatmaps/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="heatmaps" output_port_id="heatmaps" />
+		<IR name="heatmaps" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/Pose3D/Concat" output_port_id="/Pose3D/Concat_output_0" />
+		<IR name="/Pose3D/Concat" output_port_id="3" />
+	</map>
+	<map>
+		<framework name="onnx::Conv_739" output_port_id="onnx::Conv_739" />
+		<IR name="onnx::Conv_739" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/Pose3D/stem/stem.0/align/align.0/Conv" output_port_id="/Pose3D/stem/stem.0/align/align.0/Conv_output_0" />
+		<IR name="/Pose3D/stem/stem.0/align/align.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/Pose3D/stem/stem.0/align/align.2/Relu" output_port_id="/Pose3D/stem/stem.0/align/align.2/Relu_output_0" />
+		<IR name="/Pose3D/stem/stem.0/align/align.2/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="onnx::Conv_730" output_port_id="onnx::Conv_730" />
+		<IR name="onnx::Conv_730" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/Pose3D/stem/stem.0/bottleneck/bottleneck.0/bottleneck.0.0/Conv" output_port_id="/Pose3D/stem/stem.0/bottleneck/bottleneck.0/bottleneck.0.0/Conv_output_0" />
+		<IR name="/Pose3D/stem/stem.0/bottleneck/bottleneck.0/bottleneck.0.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/Pose3D/stem/stem.0/bottleneck/bottleneck.0/bottleneck.0.2/Relu" output_port_id="/Pose3D/stem/stem.0/bottleneck/bottleneck.0/bottleneck.0.2/Relu_output_0" />
+		<IR name="/Pose3D/stem/stem.0/bottleneck/bottleneck.0/bottleneck.0.2/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="onnx::Conv_733" output_port_id="onnx::Conv_733" />
+		<IR name="onnx::Conv_733" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/Pose3D/stem/stem.0/bottleneck/bottleneck.1/bottleneck.1.0/Conv" output_port_id="/Pose3D/stem/stem.0/bottleneck/bottleneck.1/bottleneck.1.0/Conv_output_0" />
+		<IR name="/Pose3D/stem/stem.0/bottleneck/bottleneck.1/bottleneck.1.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/Pose3D/stem/stem.0/bottleneck/bottleneck.1/bottleneck.1.2/Relu" output_port_id="/Pose3D/stem/stem.0/bottleneck/bottleneck.1/bottleneck.1.2/Relu_output_0" />
+		<IR name="/Pose3D/stem/stem.0/bottleneck/bottleneck.1/bottleneck.1.2/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="onnx::Conv_736" output_port_id="onnx::Conv_736" />
+		<IR name="onnx::Conv_736" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/Pose3D/stem/stem.0/bottleneck/bottleneck.2/bottleneck.2.0/Conv" output_port_id="/Pose3D/stem/stem.0/bottleneck/bottleneck.2/bottleneck.2.0/Conv_output_0" />
+		<IR name="/Pose3D/stem/stem.0/bottleneck/bottleneck.2/bottleneck.2.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/Pose3D/stem/stem.0/bottleneck/bottleneck.2/bottleneck.2.2/Relu" output_port_id="/Pose3D/stem/stem.0/bottleneck/bottleneck.2/bottleneck.2.2/Relu_output_0" />
+		<IR name="/Pose3D/stem/stem.0/bottleneck/bottleneck.2/bottleneck.2.2/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="/Pose3D/stem/stem.0/Add" output_port_id="/Pose3D/stem/stem.0/Add_output_0" />
+		<IR name="/Pose3D/stem/stem.0/Add" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="onnx::Conv_742" output_port_id="onnx::Conv_742" />
+		<IR name="onnx::Conv_742" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/Pose3D/stem/stem.1/bottleneck/bottleneck.0/bottleneck.0.0/Conv" output_port_id="/Pose3D/stem/stem.1/bottleneck/bottleneck.0/bottleneck.0.0/Conv_output_0" />
+		<IR name="/Pose3D/stem/stem.1/bottleneck/bottleneck.0/bottleneck.0.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/Pose3D/stem/stem.1/bottleneck/bottleneck.0/bottleneck.0.2/Relu" output_port_id="/Pose3D/stem/stem.1/bottleneck/bottleneck.0/bottleneck.0.2/Relu_output_0" />
+		<IR name="/Pose3D/stem/stem.1/bottleneck/bottleneck.0/bottleneck.0.2/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="onnx::Conv_745" output_port_id="onnx::Conv_745" />
+		<IR name="onnx::Conv_745" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/Pose3D/stem/stem.1/bottleneck/bottleneck.1/bottleneck.1.0/Conv" output_port_id="/Pose3D/stem/stem.1/bottleneck/bottleneck.1/bottleneck.1.0/Conv_output_0" />
+		<IR name="/Pose3D/stem/stem.1/bottleneck/bottleneck.1/bottleneck.1.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/Pose3D/stem/stem.1/bottleneck/bottleneck.1/bottleneck.1.2/Relu" output_port_id="/Pose3D/stem/stem.1/bottleneck/bottleneck.1/bottleneck.1.2/Relu_output_0" />
+		<IR name="/Pose3D/stem/stem.1/bottleneck/bottleneck.1/bottleneck.1.2/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="onnx::Conv_748" output_port_id="onnx::Conv_748" />
+		<IR name="onnx::Conv_748" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/Pose3D/stem/stem.1/bottleneck/bottleneck.2/bottleneck.2.0/Conv" output_port_id="/Pose3D/stem/stem.1/bottleneck/bottleneck.2/bottleneck.2.0/Conv_output_0" />
+		<IR name="/Pose3D/stem/stem.1/bottleneck/bottleneck.2/bottleneck.2.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/Pose3D/stem/stem.1/bottleneck/bottleneck.2/bottleneck.2.2/Relu" output_port_id="/Pose3D/stem/stem.1/bottleneck/bottleneck.2/bottleneck.2.2/Relu_output_0" />
+		<IR name="/Pose3D/stem/stem.1/bottleneck/bottleneck.2/bottleneck.2.2/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="/Pose3D/stem/stem.1/Add" output_port_id="/Pose3D/stem/stem.1/Add_output_0" />
+		<IR name="/Pose3D/stem/stem.1/Add" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="onnx::Conv_751" output_port_id="onnx::Conv_751" />
+		<IR name="onnx::Conv_751" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/Pose3D/stem/stem.2/bottleneck/bottleneck.0/bottleneck.0.0/Conv" output_port_id="/Pose3D/stem/stem.2/bottleneck/bottleneck.0/bottleneck.0.0/Conv_output_0" />
+		<IR name="/Pose3D/stem/stem.2/bottleneck/bottleneck.0/bottleneck.0.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/Pose3D/stem/stem.2/bottleneck/bottleneck.0/bottleneck.0.2/Relu" output_port_id="/Pose3D/stem/stem.2/bottleneck/bottleneck.0/bottleneck.0.2/Relu_output_0" />
+		<IR name="/Pose3D/stem/stem.2/bottleneck/bottleneck.0/bottleneck.0.2/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="onnx::Conv_754" output_port_id="onnx::Conv_754" />
+		<IR name="onnx::Conv_754" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/Pose3D/stem/stem.2/bottleneck/bottleneck.1/bottleneck.1.0/Conv" output_port_id="/Pose3D/stem/stem.2/bottleneck/bottleneck.1/bottleneck.1.0/Conv_output_0" />
+		<IR name="/Pose3D/stem/stem.2/bottleneck/bottleneck.1/bottleneck.1.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/Pose3D/stem/stem.2/bottleneck/bottleneck.1/bottleneck.1.2/Relu" output_port_id="/Pose3D/stem/stem.2/bottleneck/bottleneck.1/bottleneck.1.2/Relu_output_0" />
+		<IR name="/Pose3D/stem/stem.2/bottleneck/bottleneck.1/bottleneck.1.2/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="onnx::Conv_757" output_port_id="onnx::Conv_757" />
+		<IR name="onnx::Conv_757" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/Pose3D/stem/stem.2/bottleneck/bottleneck.2/bottleneck.2.0/Conv" output_port_id="/Pose3D/stem/stem.2/bottleneck/bottleneck.2/bottleneck.2.0/Conv_output_0" />
+		<IR name="/Pose3D/stem/stem.2/bottleneck/bottleneck.2/bottleneck.2.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/Pose3D/stem/stem.2/bottleneck/bottleneck.2/bottleneck.2.2/Relu" output_port_id="/Pose3D/stem/stem.2/bottleneck/bottleneck.2/bottleneck.2.2/Relu_output_0" />
+		<IR name="/Pose3D/stem/stem.2/bottleneck/bottleneck.2/bottleneck.2.2/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="/Pose3D/stem/stem.2/Add" output_port_id="/Pose3D/stem/stem.2/Add_output_0" />
+		<IR name="/Pose3D/stem/stem.2/Add" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="onnx::Conv_760" output_port_id="onnx::Conv_760" />
+		<IR name="onnx::Conv_760" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/Pose3D/stem/stem.3/bottleneck/bottleneck.0/bottleneck.0.0/Conv" output_port_id="/Pose3D/stem/stem.3/bottleneck/bottleneck.0/bottleneck.0.0/Conv_output_0" />
+		<IR name="/Pose3D/stem/stem.3/bottleneck/bottleneck.0/bottleneck.0.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/Pose3D/stem/stem.3/bottleneck/bottleneck.0/bottleneck.0.2/Relu" output_port_id="/Pose3D/stem/stem.3/bottleneck/bottleneck.0/bottleneck.0.2/Relu_output_0" />
+		<IR name="/Pose3D/stem/stem.3/bottleneck/bottleneck.0/bottleneck.0.2/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="onnx::Conv_763" output_port_id="onnx::Conv_763" />
+		<IR name="onnx::Conv_763" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/Pose3D/stem/stem.3/bottleneck/bottleneck.1/bottleneck.1.0/Conv" output_port_id="/Pose3D/stem/stem.3/bottleneck/bottleneck.1/bottleneck.1.0/Conv_output_0" />
+		<IR name="/Pose3D/stem/stem.3/bottleneck/bottleneck.1/bottleneck.1.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/Pose3D/stem/stem.3/bottleneck/bottleneck.1/bottleneck.1.2/Relu" output_port_id="/Pose3D/stem/stem.3/bottleneck/bottleneck.1/bottleneck.1.2/Relu_output_0" />
+		<IR name="/Pose3D/stem/stem.3/bottleneck/bottleneck.1/bottleneck.1.2/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="onnx::Conv_766" output_port_id="onnx::Conv_766" />
+		<IR name="onnx::Conv_766" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/Pose3D/stem/stem.3/bottleneck/bottleneck.2/bottleneck.2.0/Conv" output_port_id="/Pose3D/stem/stem.3/bottleneck/bottleneck.2/bottleneck.2.0/Conv_output_0" />
+		<IR name="/Pose3D/stem/stem.3/bottleneck/bottleneck.2/bottleneck.2.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/Pose3D/stem/stem.3/bottleneck/bottleneck.2/bottleneck.2.2/Relu" output_port_id="/Pose3D/stem/stem.3/bottleneck/bottleneck.2/bottleneck.2.2/Relu_output_0" />
+		<IR name="/Pose3D/stem/stem.3/bottleneck/bottleneck.2/bottleneck.2.2/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="/Pose3D/stem/stem.3/Add" output_port_id="/Pose3D/stem/stem.3/Add_output_0" />
+		<IR name="/Pose3D/stem/stem.3/Add" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="onnx::Conv_769" output_port_id="onnx::Conv_769" />
+		<IR name="onnx::Conv_769" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/Pose3D/stem/stem.4/bottleneck/bottleneck.0/bottleneck.0.0/Conv" output_port_id="/Pose3D/stem/stem.4/bottleneck/bottleneck.0/bottleneck.0.0/Conv_output_0" />
+		<IR name="/Pose3D/stem/stem.4/bottleneck/bottleneck.0/bottleneck.0.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/Pose3D/stem/stem.4/bottleneck/bottleneck.0/bottleneck.0.2/Relu" output_port_id="/Pose3D/stem/stem.4/bottleneck/bottleneck.0/bottleneck.0.2/Relu_output_0" />
+		<IR name="/Pose3D/stem/stem.4/bottleneck/bottleneck.0/bottleneck.0.2/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="onnx::Conv_772" output_port_id="onnx::Conv_772" />
+		<IR name="onnx::Conv_772" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/Pose3D/stem/stem.4/bottleneck/bottleneck.1/bottleneck.1.0/Conv" output_port_id="/Pose3D/stem/stem.4/bottleneck/bottleneck.1/bottleneck.1.0/Conv_output_0" />
+		<IR name="/Pose3D/stem/stem.4/bottleneck/bottleneck.1/bottleneck.1.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/Pose3D/stem/stem.4/bottleneck/bottleneck.1/bottleneck.1.2/Relu" output_port_id="/Pose3D/stem/stem.4/bottleneck/bottleneck.1/bottleneck.1.2/Relu_output_0" />
+		<IR name="/Pose3D/stem/stem.4/bottleneck/bottleneck.1/bottleneck.1.2/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="onnx::Conv_775" output_port_id="onnx::Conv_775" />
+		<IR name="onnx::Conv_775" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/Pose3D/stem/stem.4/bottleneck/bottleneck.2/bottleneck.2.0/Conv" output_port_id="/Pose3D/stem/stem.4/bottleneck/bottleneck.2/bottleneck.2.0/Conv_output_0" />
+		<IR name="/Pose3D/stem/stem.4/bottleneck/bottleneck.2/bottleneck.2.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/Pose3D/stem/stem.4/bottleneck/bottleneck.2/bottleneck.2.2/Relu" output_port_id="/Pose3D/stem/stem.4/bottleneck/bottleneck.2/bottleneck.2.2/Relu_output_0" />
+		<IR name="/Pose3D/stem/stem.4/bottleneck/bottleneck.2/bottleneck.2.2/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="/Pose3D/stem/stem.4/Add" output_port_id="/Pose3D/stem/stem.4/Add_output_0" />
+		<IR name="/Pose3D/stem/stem.4/Add" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="Pose3D.prediction.trunk.0.initial.0.weight" output_port_id="Pose3D.prediction.trunk.0.initial.0.weight" />
+		<IR name="Pose3D.prediction.trunk.0.initial.0.weight" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/Pose3D/prediction/trunk/trunk.0/initial/initial.0/Conv" output_port_id="/Pose3D/prediction/trunk/trunk.0/initial/initial.0/Conv_output_0" />
+		<IR name="/Pose3D/prediction/trunk/trunk.0/initial/initial.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/Pose3D/prediction/trunk/trunk.0/initial/initial.1/Relu" output_port_id="/Pose3D/prediction/trunk/trunk.0/initial/initial.1/Relu_output_0" />
+		<IR name="/Pose3D/prediction/trunk/trunk.0/initial/initial.1/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="onnx::Conv_778" output_port_id="onnx::Conv_778" />
+		<IR name="onnx::Conv_778" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/Pose3D/prediction/trunk/trunk.0/trunk/trunk.0/trunk.0.0/Conv" output_port_id="/Pose3D/prediction/trunk/trunk.0/trunk/trunk.0/trunk.0.0/Conv_output_0" />
+		<IR name="/Pose3D/prediction/trunk/trunk.0/trunk/trunk.0/trunk.0.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/Pose3D/prediction/trunk/trunk.0/trunk/trunk.0/trunk.0.2/Relu" output_port_id="/Pose3D/prediction/trunk/trunk.0/trunk/trunk.0/trunk.0.2/Relu_output_0" />
+		<IR name="/Pose3D/prediction/trunk/trunk.0/trunk/trunk.0/trunk.0.2/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="onnx::Conv_781" output_port_id="onnx::Conv_781" />
+		<IR name="onnx::Conv_781" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/Pose3D/prediction/trunk/trunk.0/trunk/trunk.1/trunk.1.0/Conv" output_port_id="/Pose3D/prediction/trunk/trunk.0/trunk/trunk.1/trunk.1.0/Conv_output_0" />
+		<IR name="/Pose3D/prediction/trunk/trunk.0/trunk/trunk.1/trunk.1.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/Pose3D/prediction/trunk/trunk.0/trunk/trunk.1/trunk.1.2/Relu" output_port_id="/Pose3D/prediction/trunk/trunk.0/trunk/trunk.1/trunk.1.2/Relu_output_0" />
+		<IR name="/Pose3D/prediction/trunk/trunk.0/trunk/trunk.1/trunk.1.2/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="/Pose3D/prediction/trunk/trunk.0/Add" output_port_id="/Pose3D/prediction/trunk/trunk.0/Add_output_0" />
+		<IR name="/Pose3D/prediction/trunk/trunk.0/Add" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="Pose3D.prediction.trunk.1.initial.0.weight" output_port_id="Pose3D.prediction.trunk.1.initial.0.weight" />
+		<IR name="Pose3D.prediction.trunk.1.initial.0.weight" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/Pose3D/prediction/trunk/trunk.1/initial/initial.0/Conv" output_port_id="/Pose3D/prediction/trunk/trunk.1/initial/initial.0/Conv_output_0" />
+		<IR name="/Pose3D/prediction/trunk/trunk.1/initial/initial.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/Pose3D/prediction/trunk/trunk.1/initial/initial.1/Relu" output_port_id="/Pose3D/prediction/trunk/trunk.1/initial/initial.1/Relu_output_0" />
+		<IR name="/Pose3D/prediction/trunk/trunk.1/initial/initial.1/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="onnx::Conv_784" output_port_id="onnx::Conv_784" />
+		<IR name="onnx::Conv_784" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/Pose3D/prediction/trunk/trunk.1/trunk/trunk.0/trunk.0.0/Conv" output_port_id="/Pose3D/prediction/trunk/trunk.1/trunk/trunk.0/trunk.0.0/Conv_output_0" />
+		<IR name="/Pose3D/prediction/trunk/trunk.1/trunk/trunk.0/trunk.0.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/Pose3D/prediction/trunk/trunk.1/trunk/trunk.0/trunk.0.2/Relu" output_port_id="/Pose3D/prediction/trunk/trunk.1/trunk/trunk.0/trunk.0.2/Relu_output_0" />
+		<IR name="/Pose3D/prediction/trunk/trunk.1/trunk/trunk.0/trunk.0.2/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="onnx::Conv_787" output_port_id="onnx::Conv_787" />
+		<IR name="onnx::Conv_787" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/Pose3D/prediction/trunk/trunk.1/trunk/trunk.1/trunk.1.0/Conv" output_port_id="/Pose3D/prediction/trunk/trunk.1/trunk/trunk.1/trunk.1.0/Conv_output_0" />
+		<IR name="/Pose3D/prediction/trunk/trunk.1/trunk/trunk.1/trunk.1.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/Pose3D/prediction/trunk/trunk.1/trunk/trunk.1/trunk.1.2/Relu" output_port_id="/Pose3D/prediction/trunk/trunk.1/trunk/trunk.1/trunk.1.2/Relu_output_0" />
+		<IR name="/Pose3D/prediction/trunk/trunk.1/trunk/trunk.1/trunk.1.2/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="/Pose3D/prediction/trunk/trunk.1/Add" output_port_id="/Pose3D/prediction/trunk/trunk.1/Add_output_0" />
+		<IR name="/Pose3D/prediction/trunk/trunk.1/Add" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="Pose3D.prediction.feature_maps.0.0.weight" output_port_id="Pose3D.prediction.feature_maps.0.0.weight" />
+		<IR name="Pose3D.prediction.feature_maps.0.0.weight" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="/Pose3D/prediction/feature_maps/feature_maps.0/feature_maps.0.0/Conv" output_port_id="/Pose3D/prediction/feature_maps/feature_maps.0/feature_maps.0.0/Conv_output_0" />
+		<IR name="/Pose3D/prediction/feature_maps/feature_maps.0/feature_maps.0.0/Conv" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="/Pose3D/prediction/feature_maps/feature_maps.0/feature_maps.0.1/Relu" output_port_id="/Pose3D/prediction/feature_maps/feature_maps.0/feature_maps.0.1/Relu_output_0" />
+		<IR name="/Pose3D/prediction/feature_maps/feature_maps.0/feature_maps.0.1/Relu" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="Pose3D.prediction.feature_maps.1.0.weight" output_port_id="Pose3D.prediction.feature_maps.1.0.weight" />
+		<IR name="Pose3D.prediction.feature_maps.1.0.weight" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="features" output_port_id="features" />
+		<IR name="features" output_port_id="2" />
+	</map>
+</mapping>

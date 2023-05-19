@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 project(pose_extractor)
 
-set (OpenCV_DIR ~/dev/thesis/opencv-install/build/)
+set (OpenCV_DIR ~/dev/src/thesis/social-robotics-gaze-detection/opencv/build/)
 
 
 find_package(PythonInterp 3.5 REQUIRED)
