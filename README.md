@@ -56,7 +56,7 @@ pip install -r requirements.txt
 ```
 5. Install OpenCV 4 for C++ (script clones opencv repo and builds):
 ```
-bash scripts/install_cpp_opencv.sh
+bash opencv/install_cpp_opencv.sh
 ```
 6. Build `pose_extractor` module:
 ```
