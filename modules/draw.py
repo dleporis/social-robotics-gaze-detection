@@ -76,6 +76,10 @@ class Plotter3d:
             previous_position = [x, y]
         if event == cv2.EVENT_LBUTTONUP:
             should_rotate = False
+        if event == cv2.EVENT_RBUTTONUP:
+            scale_dx += 10 * (x - previous_position[0])
+            scale_dy += 10 * (y - previous_position[1])
+            previous_position = [x, y]
 
 
 body_edges = np.array(

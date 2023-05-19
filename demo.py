@@ -20,6 +20,62 @@ def rotate_poses(poses_3d, R, t):
     return poses_3d
 
 
+def gaze_direction(img, pose):
+    size = img.shape
+    nose, l_eye, r_eye, l_ear, r_ear = get_keypoint_values(pose)
+    img_points = np.array([nose, l_eye, r_eye, l_ear, r_ear], dtype="double")
+    model_points = np.array(
+        [
+            (0, 0, 0),
+            (-225, 120, -135),
+            (225, 120, -135),
+            (-350, 85, -350),
+            (350, 85, -350),
+        ],
+        dtype="double",
+    )
+
+    focal_length = size[1]
+    center = size[1] / 2, size[0] / 2
+    camera_matrix = np.array(
+        [[focal_length, 0, center[0]], [0, focal_length, center[1]], [0, 0, 1]],
+        dtype="double",
+    )
+
+    dist_coeffs = np.zeros((4, 1))
+    flags = [
+        cv2.SOLVEPNP_ITERATIVE,
+        cv2.SOLVEPNP_P3P,
+        cv2.SOLVEPNP_EPNP,
+        cv2.SOLVEPNP_AP3P,
+        cv2.SOLVEPNP_IPPE,
+        cv2.SOLVEPNP_IPPE_SQUARE,
+        cv2.SOLVEPNP_SQPNP,
+    ]
+
+    with contextlib.suppress(Exception):
+        success, rotation_vector, translation_vector = cv2.solvePnP(
+            model_points, img_points, camera_matrix, dist_coeffs, flags=flags[6]
+        )
+
+    # print(img_points)
+    nose_end_point2D, jacobian = cv2.projectPoints(
+        np.array([(0.0, 0.0, 1000.0)]),
+        rotation_vector,
+        translation_vector,
+        camera_matrix,
+        dist_coeffs,
+    )
+
+    # Responsible for the red dots
+    # for p in img_points:
+    #     # cv2.circle(img, (int(p[0]), int(p[1])), 3, (0, 0, 0), -1)
+
+    p1 = int(img_points[0][0]), int(img_points[0][1])
+    p2 = int(nose_end_point2D[0][0][0]), int(nose_end_point2D[0][0][1])
+    cv2.line(img, p1, p2, (255, 0, 0), 2)
+
+
 if __name__ == '__main__':
     parser = ArgumentParser(description='Lightweight 3D human pose estimation demo. '
                                         'Press esc to exit, "p" to (un)pause video or process next image.')
@@ -61,8 +117,12 @@ if __name__ == '__main__':
     canvas_3d = np.zeros((720, 1280, 3), dtype=np.uint8)
     plotter = Plotter3d(canvas_3d.shape[:2])
     canvas_3d_window_name = 'Canvas 3D'
-    cv2.namedWindow(canvas_3d_window_name)
+    cv2.namedWindow(canvas_3d_window_name, cv2.WINDOW_NORMAL)
     cv2.setMouseCallback(canvas_3d_window_name, Plotter3d.mouse_callback)
+
+    window_name_2d = 'ICV 3D Human Pose Estimation'
+    cv2.namedWindow(window_name_2d, cv2.WINDOW_NORMAL)
+    cv2.setMouseCallback(window_name_2d, Plotter3d.mouse_callback)
 
     file_path = args.extrinsics_path
     if file_path is None:
@@ -119,7 +179,7 @@ if __name__ == '__main__':
             mean_time = mean_time * 0.95 + current_time * 0.05
         cv2.putText(frame, 'FPS: {}'.format(int(1 / mean_time * 10) / 10),
                     (40, 80), cv2.FONT_HERSHEY_COMPLEX, 1, (0, 0, 255))
-        cv2.imshow('ICV 3D Human Pose Estimation', frame)
+        cv2.imshow(window_name_2d, frame)
 
         key = cv2.waitKey(delay)
         if key == esc_code:
