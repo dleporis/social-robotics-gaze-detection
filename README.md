@@ -1,7 +1,7 @@
 # Social Robotics Gaze Detection
 
 ## Todo
-- [ ] calculate gaze from 3D poses
+- [x] calculate gaze direction from 3D poses
 - [ ] detect when people are looking at the camera
 - [ ] determine which people are looking at each other (assumption is that they are probably at conversation, and the robot should not drive between them, but drive around)
 
