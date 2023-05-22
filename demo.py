@@ -19,7 +19,67 @@ def rotate_poses(poses_3d, R, t):
 
     return poses_3d
 
+def midpoint_3d(point1, point2):
+    return (point1 + point2) / 2
 
+def head_direction(nose, r_eye, l_eye, r_ear, l_ear):
+    eye_midpoint = midpoint_3d(r_eye, l_eye)
+    ear_midpoint = midpoint_3d(r_ear, l_ear)
+
+    # Vector between ear midpoint and nose
+    vector_ear_nose = nose - ear_midpoint
+    # Vector between ear midpoint and eye midpoint
+    vector_ear_eye = eye_midpoint - ear_midpoint
+
+    # Calculate the rotation matrix
+    desired_direction = np.array([0, 0, 1])  # Desired right direction
+    rotation_matrix = np.eye(3)
+    rotation_matrix[:, 2] = vector_ear_eye / np.linalg.norm(vector_ear_eye)
+    rotation_matrix[:, 0] = np.cross(rotation_matrix[:, 2], desired_direction)
+    rotation_matrix[:, 1] = np.cross(rotation_matrix[:, 2], rotation_matrix[:, 0])
+
+    # Calculate the head direction vector
+    head_direction = rotation_matrix @ np.array([1, 0, 0])
+    magnitude = np.linalg.norm(head_direction)
+    normal_head_direction = head_direction / magnitude
+
+    return normal_head_direction, eye_midpoint
+    """
+    angle = np.arccos(np.dot(vector_ear_nose, vector_ear_eye) / (np.linalg.norm(vector_ear_nose) * np.linalg.norm(vector_ear_eye)))
+    half_angle = angle / 2
+
+    vector_eye_ear = ear_midpoint - eye_midpoint
+    opposite_dir_vector_eye_ear = vector_eye_ear
+    rotation_matrix_1 = np.array([[1, 0, 0],
+                                [0, np.cos(-half_angle), -np.sin(-half_angle)],
+                                [0, np.sin(-half_angle), np.cos(-half_angle)]])
+
+    rotation_matrix_2 = np.array([[1, 0, 0],
+                                [0, np.cos(half_angle), -np.sin(half_angle)],
+                                [0, np.sin(half_angle), np.cos(half_angle)]])
+
+    rotation_matrix_3 = np.array([[np.cos(half_angle), -np.sin(half_angle), 0],
+                                [np.sin(half_angle), np.cos(half_angle), 0],
+                                [0, 0, 1]])
+
+    rotation_matrix_4 = np.array([[np.cos(-half_angle), -np.sin(-half_angle), 0],
+                                [np.sin(-half_angle), np.cos(-half_angle), 0],
+                                [0, 0, 1]])
+
+    rotation_matrix_5 = np.array([[np.cos(half_angle),0, np.sin(half_angle)],
+                                [0, 1, 0],
+                                [-np.sin(half_angle), 0, np.cos(half_angle)]])
+
+    rotation_matrix_6 = np.array([[np.cos(-half_angle),0, np.sin(-half_angle)],
+                                [0, 1, 0],
+                                [-np.sin(-half_angle), 0, np.cos(-half_angle)]])
+
+    head_direction = opposite_dir_vector_eye_ear @ rotation_matrix_6
+    magnitude = np.sqrt(np.dot(head_direction,head_direction))
+    normal_head_direction = head_direction / magnitude
+    return normal_head_direction, eye_midpoint
+    """
+"""
 def gaze_direction(img, pose):
     size = img.shape
     nose, l_eye, r_eye, l_ear, r_ear = get_keypoint_values(pose)
@@ -68,14 +128,14 @@ def gaze_direction(img, pose):
     )
 
     # Responsible for the red dots
-    # for p in img_points:
-    #     # cv2.circle(img, (int(p[0]), int(p[1])), 3, (0, 0, 0), -1)
+    #for p in img_points:
+    #    cv2.circle(img, (int(p[0]), int(p[1])), 4, (0, 0, 255), -1)
 
     p1 = int(img_points[0][0]), int(img_points[0][1])
     p2 = int(nose_end_point2D[0][0][0]), int(nose_end_point2D[0][0][1])
     cv2.line(img, p1, p2, (255, 0, 0), 2)
 
-
+"""
 if __name__ == '__main__':
     parser = ArgumentParser(description='Lightweight 3D human pose estimation demo. '
                                         'Press esc to exit, "p" to (un)pause video or process next image.')
@@ -114,7 +174,7 @@ if __name__ == '__main__':
         from modules.inference_engine_pytorch import InferenceEnginePyTorch
         net = InferenceEnginePyTorch(args.model, args.device, use_tensorrt=args.use_tensorrt)
 
-    canvas_3d = np.zeros((720, 1280, 3), dtype=np.uint8)
+    canvas_3d = np.zeros((720*2, 1280*2, 3), dtype=np.uint8)
     plotter = Plotter3d(canvas_3d.shape[:2])
     canvas_3d_window_name = 'Canvas 3D'
     cv2.namedWindow(canvas_3d_window_name, cv2.WINDOW_NORMAL)
@@ -157,6 +217,12 @@ if __name__ == '__main__':
 
         inference_result = net.infer(scaled_img)
         poses_3d, poses_2d = parse_poses(inference_result, input_scale, stride, fx, is_video)
+        """
+        print("############### New frame Poses 3D #####################")
+        print(poses_3d)
+        print("## Same frame Poses 2D ##")
+        print(poses_2d)
+        """
         edges = []
         if len(poses_3d):
             poses_3d = rotate_poses(poses_3d, R, t)
@@ -164,20 +230,73 @@ if __name__ == '__main__':
             x = poses_3d_copy[:, 0::4]
             y = poses_3d_copy[:, 1::4]
             z = poses_3d_copy[:, 2::4]
+            """
+            print("x")
+            print(x)
+            print("y")
+            print(y)
+            print("z")
+            print(z)
+            """
             poses_3d[:, 0::4], poses_3d[:, 1::4], poses_3d[:, 2::4] = -z, x, -y
 
             poses_3d = poses_3d.reshape(poses_3d.shape[0], 19, -1)[:, :, 0:3]
+            print("\n#################\nposes_3d")
+            print(poses_3d)
+            head_dirs_3d = np.zeros((poses_3d.shape[0], 3))
+            all_eye_midpoints_3d = np.zeros((poses_3d.shape[0], 3))
+            print("poses_3d.shape, head_dirs_3d.shape, all_eye_midpoints_3d.shape")
+            print(poses_3d.shape)
+            print(head_dirs_3d.shape)
+            print(all_eye_midpoints_3d.shape)
+            print("head_dirs_3d")
+            print(head_dirs_3d)
+            
+            print("all_eye_midpoints_3d")
+            print(all_eye_midpoints_3d)
+            for idx, pose_3d in enumerate(poses_3d):
+                # face_names = ['nose' 1, 'r_eye' 15, 'l_eye' 16, 'r_ear' 17, 'l_ear' 18]
+                print("\nPose idx")
+                print(idx)
+                nose = pose_3d[1]
+                r_eye = pose_3d[15]
+                l_eye = pose_3d[16]
+                r_ear = pose_3d[17]
+                l_ear = pose_3d[18]
+                print("nose, r_eye, l_eye, r_ear, l_ear")
+                print(nose)
+                print(r_eye)
+                print(l_eye)
+                print(r_ear)
+                print(l_ear)
+                head_dir_3d, midpoint_eyes_3d = head_direction(nose, r_eye, l_eye, r_ear, l_ear)
+                print("midpoint_eyes")
+                print(midpoint_eyes_3d)
+                print("head_dir_3d")
+                print(head_dir_3d)
+                
+                head_dirs_3d[idx] = head_dir_3d
+                all_eye_midpoints_3d[idx] = midpoint_eyes_3d
+            
             edges = (Plotter3d.SKELETON_EDGES + 19 * np.arange(poses_3d.shape[0]).reshape((-1, 1, 1))).reshape((-1, 2))
-        plotter.plot(canvas_3d, poses_3d, edges)
+
+            print("head_dirs_3d")
+            print(head_dirs_3d)
+            print("all_eye_midpoints_3d")
+            print(all_eye_midpoints_3d)
+            
+        plotter.plot(canvas_3d, poses_3d, edges, head_dirs_3d, all_eye_midpoints_3d, gaze_scale=50)
+        
         cv2.imshow(canvas_3d_window_name, canvas_3d)
 
+        
         draw_poses(frame, poses_2d)
         current_time = (cv2.getTickCount() - current_time) / cv2.getTickFrequency()
         if mean_time == 0:
             mean_time = current_time
         else:
             mean_time = mean_time * 0.95 + current_time * 0.05
-        cv2.putText(frame, 'FPS: {}'.format(int(1 / mean_time * 10) / 10),
+        cv2.putText(frame, 'processing FPS: {}'.format(int(1 / mean_time * 10) / 10),
                     (40, 80), cv2.FONT_HERSHEY_COMPLEX, 1, (0, 0, 255))
         cv2.imshow(window_name_2d, frame)
 
@@ -194,7 +313,8 @@ if __name__ == '__main__':
             while (key != p_code
                    and key != esc_code
                    and key != space_code):
-                plotter.plot(canvas_3d, poses_3d, edges)
+                print("\n###################")
+                plotter.plot(canvas_3d, poses_3d, edges, head_dirs_3d, all_eye_midpoints_3d, gaze_scale=50)
                 cv2.imshow(canvas_3d_window_name, canvas_3d)
                 key = cv2.waitKey(33)
             if key == esc_code:
