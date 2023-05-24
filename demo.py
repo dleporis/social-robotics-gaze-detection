@@ -9,7 +9,8 @@ import datetime
 from modules.input_reader import VideoReader, ImageReader
 from modules.draw import Plotter3d, draw_poses
 from modules.parse_poses import parse_poses
-
+import logging
+from tabulate import tabulate
 
 def rotate_poses(poses_3d, R, t):
     R_inv = np.linalg.inv(R)
@@ -80,6 +81,12 @@ def head_direction(nose, r_eye, l_eye, r_ear, l_ear):
     normal_head_direction = head_direction / magnitude
     return normal_head_direction, eye_midpoint
     """
+def finish(input, output, o_file, log_file):
+    input.release()
+    output.release()
+    cv2.destroyAllWindows()
+    print("Output: {}\nLog: {}".format(o_file, log_file))
+
 
 if __name__ == '__main__':
     parser = ArgumentParser(description='Lightweight 3D human pose estimation demo. '
@@ -154,18 +161,16 @@ if __name__ == '__main__':
             output_file = args.video
             head, sep, tail = output_file.partition('.')
             output_file = head + "gaze_estimation" + timestamp + ".mp4"
-            output_path = head + "gaze_estimation" + timestamp + "/frames/"
-            if not os.path.exists(output_path):
-                os.makedirs(output_path)
-            canvas_output_file = head + "gaze_estimation"+ timestamp + "canvas3d.mp4"
-            canvas_output_path = head + "gaze_estimation" + timestamp + "/canvas3d/"
-            if not os.path.exists(canvas_output_path):
-                os.makedirs(canvas_output_path)
+            logging_file = head + "gaze_estimation" + timestamp + ".log"
+       
         print("Reading: {}".format(args.video))
         print("Writing to: {}".format(output_file))
         frame_provider = VideoReader(args.video, width_video_in, height_video_in)
         fourcc = cv2.VideoWriter_fourcc(*'mp4v')
         video_out = cv2.VideoWriter(output_file, fourcc, 30.0, (width_video_in+canvas_3d.shape[1], height_video_in))
+        # Set up logging
+        logging.basicConfig(filename=logging_file, level=logging.INFO)
+        headers = ['Frame', 'Person ID', 'midpoint_eyes_3d', "head_dir_3d"]
         is_video = True
     base_height = args.height_size
     fx = args.fx
@@ -176,6 +181,7 @@ if __name__ == '__main__':
     space_code = 32
     mean_time = 0
     for frame_index, frame in enumerate(frame_provider):
+        frame_data = []
         try:
             current_time = cv2.getTickCount()
             if frame is None:
@@ -194,7 +200,7 @@ if __name__ == '__main__':
             plotter.clear(canvas_3d)
             edges = []
             if len(poses_3d):
-                print("############### Frame number: {} ###############".format(frame_index))
+                #print("############### Frame number: {} ###############".format(frame_index))
                 poses_3d = rotate_poses(poses_3d, R, t)
                 poses_3d_copy = poses_3d.copy()
                 x = poses_3d_copy[:, 0::4]
@@ -211,7 +217,7 @@ if __name__ == '__main__':
                 for idx, pose_3d in enumerate(poses_3d):
                     # face_names = ['nose' 1, 'r_eye' 15, 'l_eye' 16, 'r_ear' 17, 'l_ear' 18]
                     
-                    print("\n#### Person number: {}".format(idx))
+                    #print("\n#### Person number: {}".format(idx))
                     
                     nose = pose_3d[1]
                     r_eye = pose_3d[15]
@@ -220,15 +226,16 @@ if __name__ == '__main__':
                     l_ear = pose_3d[18]
                     
                     head_dir_3d, midpoint_eyes_3d = head_direction(nose, r_eye, l_eye, r_ear, l_ear)
-                    
-                    print("midpoint_eyes")
-                    print(midpoint_eyes_3d)
-                    print("head_dir_3d")
-                    print(head_dir_3d)
+                    frame_datapoint = [frame_index, idx, midpoint_eyes_3d, head_dir_3d]
+                    frame_data.append(frame_datapoint)  # Add data to the frame
                     
                     head_dirs_3d[idx] = head_dir_3d
                     all_eye_midpoints_3d[idx] = midpoint_eyes_3d
                 
+                table = tabulate(frame_data, headers, tablefmt='grid')
+                print(table)
+                # Log data
+                logging.info('\n' + table)
                 edges = (Plotter3d.SKELETON_EDGES + 19 * np.arange(poses_3d.shape[0]).reshape((-1, 1, 1))).reshape((-1, 2))
                 plotter.plot(canvas_3d, poses_3d, edges, head_dirs_3d, all_eye_midpoints_3d, gaze_scale=50)
             
@@ -236,6 +243,8 @@ if __name__ == '__main__':
 
             
             draw_poses(frame, poses_2d)
+            # Print the table for the frame to the terminal
+            
             current_time = (cv2.getTickCount() - current_time) / cv2.getTickFrequency()
             if mean_time == 0:
                 mean_time = current_time
@@ -273,14 +282,6 @@ if __name__ == '__main__':
                     delay = 1
         except KeyboardInterrupt:
             print("ctrl+c keyboard interupt detected")
-            frame_provider.release()
-            video_out.release()
-            #canvas_out.release()
-            cv2.destroyAllWindows()
-            print("Output: {}".format(output_file))
-        
-frame_provider.release()
-video_out.release()
-#canvas_out.release()
-cv2.destroyAllWindows()
-print("Output: {}".format(output_file))
+            finish(frame_provider, video_out, output_file, logging_file)
+
+finish(frame_provider, video_out, output_file, logging_file)        

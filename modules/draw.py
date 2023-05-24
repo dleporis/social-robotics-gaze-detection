@@ -61,7 +61,7 @@ class Plotter3d:
 
             # Draw the line on the canvas
             cv2.arrowedLine(img, tuple(gaze_origin_2d_int), tuple(gaze_end_2d_int), (255, 255, 0), 1, cv2.LINE_AA)
-
+            cv2.putText(img, str(idx), (gaze_origin_2d_int[0], gaze_origin_2d_int[1]-50), cv2.FONT_HERSHEY_COMPLEX, 1, (0, 255, 0))
     def _draw_axes(self, img, R):
         axes_2d = np.dot(self.axes, R)
         axes_2d = axes_2d * self.scale + self.origin
