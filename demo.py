@@ -4,6 +4,7 @@ import os
 
 import cv2
 import numpy as np
+import datetime
 
 from modules.input_reader import VideoReader, ImageReader
 from modules.draw import Plotter3d, draw_poses
@@ -79,63 +80,7 @@ def head_direction(nose, r_eye, l_eye, r_ear, l_ear):
     normal_head_direction = head_direction / magnitude
     return normal_head_direction, eye_midpoint
     """
-"""
-def gaze_direction(img, pose):
-    size = img.shape
-    nose, l_eye, r_eye, l_ear, r_ear = get_keypoint_values(pose)
-    img_points = np.array([nose, l_eye, r_eye, l_ear, r_ear], dtype="double")
-    model_points = np.array(
-        [
-            (0, 0, 0),
-            (-225, 120, -135),
-            (225, 120, -135),
-            (-350, 85, -350),
-            (350, 85, -350),
-        ],
-        dtype="double",
-    )
 
-    focal_length = size[1]
-    center = size[1] / 2, size[0] / 2
-    camera_matrix = np.array(
-        [[focal_length, 0, center[0]], [0, focal_length, center[1]], [0, 0, 1]],
-        dtype="double",
-    )
-
-    dist_coeffs = np.zeros((4, 1))
-    flags = [
-        cv2.SOLVEPNP_ITERATIVE,
-        cv2.SOLVEPNP_P3P,
-        cv2.SOLVEPNP_EPNP,
-        cv2.SOLVEPNP_AP3P,
-        cv2.SOLVEPNP_IPPE,
-        cv2.SOLVEPNP_IPPE_SQUARE,
-        cv2.SOLVEPNP_SQPNP,
-    ]
-
-    with contextlib.suppress(Exception):
-        success, rotation_vector, translation_vector = cv2.solvePnP(
-            model_points, img_points, camera_matrix, dist_coeffs, flags=flags[6]
-        )
-
-    # print(img_points)
-    nose_end_point2D, jacobian = cv2.projectPoints(
-        np.array([(0.0, 0.0, 1000.0)]),
-        rotation_vector,
-        translation_vector,
-        camera_matrix,
-        dist_coeffs,
-    )
-
-    # Responsible for the red dots
-    #for p in img_points:
-    #    cv2.circle(img, (int(p[0]), int(p[1])), 4, (0, 0, 255), -1)
-
-    p1 = int(img_points[0][0]), int(img_points[0][1])
-    p2 = int(nose_end_point2D[0][0][0]), int(nose_end_point2D[0][0][1])
-    cv2.line(img, p1, p2, (255, 0, 0), 2)
-
-"""
 if __name__ == '__main__':
     parser = ArgumentParser(description='Lightweight 3D human pose estimation demo. '
                                         'Press esc to exit, "p" to (un)pause video or process next image.')
@@ -174,7 +119,7 @@ if __name__ == '__main__':
         from modules.inference_engine_pytorch import InferenceEnginePyTorch
         net = InferenceEnginePyTorch(args.model, args.device, use_tensorrt=args.use_tensorrt)
 
-    canvas_3d = np.zeros((720*2, 1280*2, 3), dtype=np.uint8)
+    canvas_3d = np.zeros(( 1080, 1080, 3), dtype=np.uint8)
     plotter = Plotter3d(canvas_3d.shape[:2])
     canvas_3d_window_name = 'Canvas 3D'
     cv2.namedWindow(canvas_3d_window_name, cv2.WINDOW_NORMAL)
@@ -195,7 +140,32 @@ if __name__ == '__main__':
     frame_provider = ImageReader(args.images)
     is_video = False
     if args.video != '':
-        frame_provider = VideoReader(args.video)
+        
+        height_video_in = 1080
+        
+        timestamp = '{:%Y-%m-%d_%H-%M-%S}'.format(datetime.datetime.now())
+        if args.video == str(0) or args.video == str(1) or args.video == str(2) or args.video == (3):
+            width_video_in = 1920
+            timestamp = '{:%Y-%m-%d_%H-%M-%S}'.format(datetime.datetime.now())
+            output_file = "recorded_videos/"+timestamp+"video"+args.video+".mp4"
+            
+        else:
+            width_video_in = 2336
+            output_file = args.video
+            head, sep, tail = output_file.partition('.')
+            output_file = head + "gaze_estimation" + timestamp + ".mp4"
+            output_path = head + "gaze_estimation" + timestamp + "/frames/"
+            if not os.path.exists(output_path):
+                os.makedirs(output_path)
+            canvas_output_file = head + "gaze_estimation"+ timestamp + "canvas3d.mp4"
+            canvas_output_path = head + "gaze_estimation" + timestamp + "/canvas3d/"
+            if not os.path.exists(canvas_output_path):
+                os.makedirs(canvas_output_path)
+        print("Reading: {}".format(args.video))
+        print("Writing to: {}".format(output_file))
+        frame_provider = VideoReader(args.video, width_video_in, height_video_in)
+        fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+        video_out = cv2.VideoWriter(output_file, fourcc, 30.0, (width_video_in+canvas_3d.shape[1], height_video_in))
         is_video = True
     base_height = args.height_size
     fx = args.fx
@@ -205,119 +175,112 @@ if __name__ == '__main__':
     p_code = 112
     space_code = 32
     mean_time = 0
-    for frame in frame_provider:
-        current_time = cv2.getTickCount()
-        if frame is None:
-            break
-        input_scale = base_height / frame.shape[0]
-        scaled_img = cv2.resize(frame, dsize=None, fx=input_scale, fy=input_scale)
-        scaled_img = scaled_img[:, 0:scaled_img.shape[1] - (scaled_img.shape[1] % stride)]  # better to pad, but cut out for demo
-        if fx < 0:  # Focal length is unknown
-            fx = np.float32(0.8 * frame.shape[1])
+    for frame_index, frame in enumerate(frame_provider):
+        try:
+            current_time = cv2.getTickCount()
+            if frame is None:
+                break
+            input_scale = base_height / frame.shape[0]
+            scaled_img = cv2.resize(frame, dsize=None, fx=input_scale, fy=input_scale)
+            scaled_img = scaled_img[:, 0:scaled_img.shape[1] - (scaled_img.shape[1] % stride)]  # better to pad, but cut out for demo
+            if fx < 0:  # Focal length is unknown
+                fx = np.float32(0.8 * frame.shape[1])
 
-        inference_result = net.infer(scaled_img)
-        poses_3d, poses_2d = parse_poses(inference_result, input_scale, stride, fx, is_video)
-        """
-        print("############### New frame Poses 3D #####################")
-        print(poses_3d)
-        print("## Same frame Poses 2D ##")
-        print(poses_2d)
-        """
-        edges = []
-        if len(poses_3d):
-            poses_3d = rotate_poses(poses_3d, R, t)
-            poses_3d_copy = poses_3d.copy()
-            x = poses_3d_copy[:, 0::4]
-            y = poses_3d_copy[:, 1::4]
-            z = poses_3d_copy[:, 2::4]
-            """
-            print("x")
-            print(x)
-            print("y")
-            print(y)
-            print("z")
-            print(z)
-            """
-            poses_3d[:, 0::4], poses_3d[:, 1::4], poses_3d[:, 2::4] = -z, x, -y
-
-            poses_3d = poses_3d.reshape(poses_3d.shape[0], 19, -1)[:, :, 0:3]
-            print("\n#################\nposes_3d")
-            print(poses_3d)
-            head_dirs_3d = np.zeros((poses_3d.shape[0], 3))
-            all_eye_midpoints_3d = np.zeros((poses_3d.shape[0], 3))
-            print("poses_3d.shape, head_dirs_3d.shape, all_eye_midpoints_3d.shape")
-            print(poses_3d.shape)
-            print(head_dirs_3d.shape)
-            print(all_eye_midpoints_3d.shape)
-            print("head_dirs_3d")
-            print(head_dirs_3d)
+            inference_result = net.infer(scaled_img)
+            poses_3d, poses_2d = parse_poses(inference_result, input_scale, stride, fx, is_video)
             
-            print("all_eye_midpoints_3d")
-            print(all_eye_midpoints_3d)
-            for idx, pose_3d in enumerate(poses_3d):
-                # face_names = ['nose' 1, 'r_eye' 15, 'l_eye' 16, 'r_ear' 17, 'l_ear' 18]
-                print("\nPose idx")
-                print(idx)
-                nose = pose_3d[1]
-                r_eye = pose_3d[15]
-                l_eye = pose_3d[16]
-                r_ear = pose_3d[17]
-                l_ear = pose_3d[18]
-                print("nose, r_eye, l_eye, r_ear, l_ear")
-                print(nose)
-                print(r_eye)
-                print(l_eye)
-                print(r_ear)
-                print(l_ear)
-                head_dir_3d, midpoint_eyes_3d = head_direction(nose, r_eye, l_eye, r_ear, l_ear)
-                print("midpoint_eyes")
-                print(midpoint_eyes_3d)
-                print("head_dir_3d")
-                print(head_dir_3d)
+            
+            
+            plotter.clear(canvas_3d)
+            edges = []
+            if len(poses_3d):
+                print("############### Frame number: {} ###############".format(frame_index))
+                poses_3d = rotate_poses(poses_3d, R, t)
+                poses_3d_copy = poses_3d.copy()
+                x = poses_3d_copy[:, 0::4]
+                y = poses_3d_copy[:, 1::4]
+                z = poses_3d_copy[:, 2::4]
+
+                poses_3d[:, 0::4], poses_3d[:, 1::4], poses_3d[:, 2::4] = -z, x, -y
+
+                poses_3d = poses_3d.reshape(poses_3d.shape[0], 19, -1)[:, :, 0:3]
+             
+                head_dirs_3d = np.zeros((poses_3d.shape[0], 3))
+                all_eye_midpoints_3d = np.zeros((poses_3d.shape[0], 3))
+             
+                for idx, pose_3d in enumerate(poses_3d):
+                    # face_names = ['nose' 1, 'r_eye' 15, 'l_eye' 16, 'r_ear' 17, 'l_ear' 18]
+                    
+                    print("\n#### Person number: {}".format(idx))
+                    
+                    nose = pose_3d[1]
+                    r_eye = pose_3d[15]
+                    l_eye = pose_3d[16]
+                    r_ear = pose_3d[17]
+                    l_ear = pose_3d[18]
+                    
+                    head_dir_3d, midpoint_eyes_3d = head_direction(nose, r_eye, l_eye, r_ear, l_ear)
+                    
+                    print("midpoint_eyes")
+                    print(midpoint_eyes_3d)
+                    print("head_dir_3d")
+                    print(head_dir_3d)
+                    
+                    head_dirs_3d[idx] = head_dir_3d
+                    all_eye_midpoints_3d[idx] = midpoint_eyes_3d
                 
-                head_dirs_3d[idx] = head_dir_3d
-                all_eye_midpoints_3d[idx] = midpoint_eyes_3d
-            
-            edges = (Plotter3d.SKELETON_EDGES + 19 * np.arange(poses_3d.shape[0]).reshape((-1, 1, 1))).reshape((-1, 2))
-
-            print("head_dirs_3d")
-            print(head_dirs_3d)
-            print("all_eye_midpoints_3d")
-            print(all_eye_midpoints_3d)
-            
-        plotter.plot(canvas_3d, poses_3d, edges, head_dirs_3d, all_eye_midpoints_3d, gaze_scale=50)
-        
-        cv2.imshow(canvas_3d_window_name, canvas_3d)
-
-        
-        draw_poses(frame, poses_2d)
-        current_time = (cv2.getTickCount() - current_time) / cv2.getTickFrequency()
-        if mean_time == 0:
-            mean_time = current_time
-        else:
-            mean_time = mean_time * 0.95 + current_time * 0.05
-        cv2.putText(frame, 'processing FPS: {}'.format(int(1 / mean_time * 10) / 10),
-                    (40, 80), cv2.FONT_HERSHEY_COMPLEX, 1, (0, 0, 255))
-        cv2.imshow(window_name_2d, frame)
-
-        key = cv2.waitKey(delay)
-        if key == esc_code:
-            break
-        if key == p_code:
-            if delay == 1:
-                delay = 0
-            else:
-                delay = 1
-        if delay == 0 or not is_video:  # allow to rotate 3D canvas while on pause
-            key = 0
-            while (key != p_code
-                   and key != esc_code
-                   and key != space_code):
-                print("\n###################")
+                edges = (Plotter3d.SKELETON_EDGES + 19 * np.arange(poses_3d.shape[0]).reshape((-1, 1, 1))).reshape((-1, 2))
                 plotter.plot(canvas_3d, poses_3d, edges, head_dirs_3d, all_eye_midpoints_3d, gaze_scale=50)
-                cv2.imshow(canvas_3d_window_name, canvas_3d)
-                key = cv2.waitKey(33)
+            
+            cv2.imshow(canvas_3d_window_name, canvas_3d)
+
+            
+            draw_poses(frame, poses_2d)
+            current_time = (cv2.getTickCount() - current_time) / cv2.getTickFrequency()
+            if mean_time == 0:
+                mean_time = current_time
+            else:
+                mean_time = mean_time * 0.95 + current_time * 0.05
+            cv2.putText(frame, 'processing FPS: {}'.format(int(1 / mean_time * 10) / 10),
+                        (40, 80), cv2.FONT_HERSHEY_COMPLEX, 1, (0, 0, 255))
+            cv2.putText(frame, 'Frame number: {}'.format(frame_index),
+                        (40, 120), cv2.FONT_HERSHEY_COMPLEX, 1, (255, 0, 255))
+            cv2.imshow(window_name_2d, frame)
+
+            concat = np.hstack((canvas_3d, frame))
+            video_out.write(concat)
+          
+            key = cv2.waitKey(delay)
+            
             if key == esc_code:
                 break
-            else:
-                delay = 1
+            if key == p_code:
+                if delay == 1:
+                    delay = 0
+                else:
+                    delay = 1
+            if delay == 0 or not is_video:  # allow to rotate 3D canvas while on pause
+                key = 0
+                while (key != p_code
+                    and key != esc_code
+                    and key != space_code):
+                    plotter.plot(canvas_3d, poses_3d, edges, head_dirs_3d, all_eye_midpoints_3d, gaze_scale=50)
+                    cv2.imshow(canvas_3d_window_name, canvas_3d)
+                    key = cv2.waitKey(33)
+                if key == esc_code:
+                    break
+                else:
+                    delay = 1
+        except KeyboardInterrupt:
+            print("ctrl+c keyboard interupt detected")
+            frame_provider.release()
+            video_out.release()
+            #canvas_out.release()
+            cv2.destroyAllWindows()
+            print("Output: {}".format(output_file))
+        
+frame_provider.release()
+video_out.release()
+#canvas_out.release()
+cv2.destroyAllWindows()
+print("Output: {}".format(output_file))

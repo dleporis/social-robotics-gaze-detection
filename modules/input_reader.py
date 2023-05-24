@@ -21,17 +21,20 @@ class ImageReader:
 
 
 class VideoReader:
-    def __init__(self, file_name):
+    def __init__(self, file_name, width, height):
         self.file_name = file_name
+        self.width = width
+        self.height = height
         try:  # OpenCV needs int to read from webcam
             self.file_name = int(file_name)
         except ValueError:
             pass
+        self.cap = cv2.VideoCapture(self.file_name)
 
     def __iter__(self):
-        self.cap = cv2.VideoCapture(self.file_name)
-        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
-        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
+        
+        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.width)
+        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.height)
         if not self.cap.isOpened():
             raise IOError('Video {} cannot be opened'.format(self.file_name))
         return self
@@ -41,3 +44,9 @@ class VideoReader:
         if not was_read:
             raise StopIteration
         return img
+
+    def get_fps(self):
+        self.cap.get(cv2.CAP_PROP_FPS)
+    
+    def release(self):
+        self.cap.release()

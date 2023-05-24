@@ -36,8 +36,7 @@ def get_root_relative_poses(inference_results):
         if found_poses[pose_id, 5] == -1:  # skip pose if is not found neck
             continue
         pose_2d = np.ones(num_kpt_panoptic * 3 + 1, dtype=np.float32) * -1  # +1 for pose confidence
-        print("pose2d.shape")
-        print(pose_2d.shape)
+        
         for kpt_id in range(num_kpt):
             if found_poses[pose_id, kpt_id * 3 + 2] != -1:
                 x_2d, y_2d = found_poses[pose_id, kpt_id * 3:kpt_id * 3 + 2]
@@ -60,8 +59,7 @@ def get_root_relative_poses(inference_results):
                 poses_3d[pose_id][kpt_id * 4 + 1] = map_3d[1, neck_2d[1], neck_2d[0]] * AVG_PERSON_HEIGHT
                 poses_3d[pose_id][kpt_id * 4 + 2] = map_3d[2, neck_2d[1], neck_2d[0]] * AVG_PERSON_HEIGHT
                 poses_3d[pose_id][kpt_id * 4 + 3] = poses_2d[pose_id][kpt_id * 3 + 2]
-            print("poses3d.shape")
-            print(poses_3d.shape)
+           
             # refine keypoints coordinates at corresponding limbs locations
             for limb in limbs:
                 for kpt_id_from in limb:
@@ -73,14 +71,7 @@ def get_root_relative_poses(inference_results):
                             poses_3d[pose_id][kpt_id_where * 4 + 1] = map_3d[1, kpt_from_2d[1], kpt_from_2d[0]] * AVG_PERSON_HEIGHT
                             poses_3d[pose_id][kpt_id_where * 4 + 2] = map_3d[2, kpt_from_2d[1], kpt_from_2d[0]] * AVG_PERSON_HEIGHT
                         break
-    """
-    print("\nposes_3d")
-    print(poses_3d)
-    print("\nposes_2d")
-    print(poses_2d)
-    print("\nnp.array(poses_2d)")
-    print(np.array(poses_2d))
-    """
+  
     return poses_3d, np.array(poses_2d), features.shape
 
 
@@ -151,10 +142,5 @@ def parse_poses(inference_results, input_scale, stride, fx, is_video=False):
             pose_3d[1, kpt_id] = pose_3d[1, kpt_id] + translation[1]
             pose_3d[2, kpt_id] = pose_3d[2, kpt_id] + translation[2]
         translated_poses_3d.append(pose_3d.transpose().reshape(-1))
-    """
-    print("np.array(translated_poses_3d)")
-    print(np.array(translated_poses_3d))
-    print("np.array(poses_2d_scaled)")
-    print(np.array(poses_2d_scaled))
-    """
+ 
     return np.array(translated_poses_3d), np.array(poses_2d_scaled)
