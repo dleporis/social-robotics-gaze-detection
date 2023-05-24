@@ -19,7 +19,7 @@ class Plotter3d:
         self.scale = np.float32(scale)
         self.theta = 0
         self.phi = 0
-        axis_length = 200
+        axis_length = 400
         axes = [
             np.array([[-axis_length/2, -axis_length/2, 0], [axis_length/2, -axis_length/2, 0]], dtype=np.float32),
             np.array([[-axis_length/2, -axis_length/2, 0], [-axis_length/2, axis_length/2, 0]], dtype=np.float32),
@@ -42,6 +42,11 @@ class Plotter3d:
         if len(head_dirs_3d) != 0:
             self._plot_gaze(img, head_dirs_3d, all_eye_midpoints_3d, gaze_scale, R)
 
+    def clear(self, img):
+        img.fill(0)
+        R = self._get_rotation(theta, phi)
+        self._draw_axes(img, R)
+        
     def _plot_gaze(self, img, gaze_direction_vectors, gaze_origins, scale, R):
         for idx, gaze_origin in enumerate(gaze_origins):
             gaze_end = gaze_origin + gaze_direction_vectors[idx] * scale 
@@ -49,31 +54,11 @@ class Plotter3d:
             gaze_end_2d = np.dot(gaze_end, R)
             gaze_origin_2d = gaze_origin_2d * self.scale + self.origin
             gaze_end_2d = gaze_end_2d * self.scale + self.origin
-            print("gaze direction index"+ str(idx))
-            print("gaze_origin")
-            print(gaze_origin)
-            print("gaze_end")
-            print(gaze_end)
-            print("gaze_origin_2d")
-            print(gaze_origin_2d)
-            print("gaze_end_2d")
-            print(gaze_end_2d)
             # Convert the points to integers
             gaze_origin_2d_int = gaze_origin_2d.astype(int)
-            print("gaze_origin_2d_int[0]")
-            print(gaze_origin_2d_int[0])
-            print("gaze_origin_2d_int[1]")
-            print(gaze_origin_2d_int[1])
-            print("tuple(gaze_origin_2d_int)")
-            print(tuple(gaze_origin_2d_int))
             
             gaze_end_2d_int = gaze_end_2d.astype(int)
-            print("gaze_end_2d_int[0]")
-            print(gaze_end_2d_int[0])
-            print("gaze_end_2d_int[1]")
-            print(gaze_end_2d_int[1])
-            print("tuple(gaze_end_2d_int)")
-            print(tuple(gaze_end_2d_int))
+
             # Draw the line on the canvas
             cv2.arrowedLine(img, tuple(gaze_origin_2d_int), tuple(gaze_end_2d_int), (255, 255, 0), 1, cv2.LINE_AA)
 
