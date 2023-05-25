@@ -11,6 +11,7 @@ from modules.draw import Plotter3d, draw_poses
 from modules.parse_poses import parse_poses
 import logging
 from tabulate import tabulate
+import matplotlib.pyplot as plt
 
 def rotate_poses(poses_3d, R, t):
     R_inv = np.linalg.inv(R)
@@ -24,7 +25,7 @@ def rotate_poses(poses_3d, R, t):
 def midpoint_3d(point1, point2):
     return (point1 + point2) / 2
 
-def head_direction(nose, r_eye, l_eye, r_ear, l_ear):
+def head_direction_old(nose, r_eye, l_eye, r_ear, l_ear):
     eye_midpoint = midpoint_3d(r_eye, l_eye)
     ear_midpoint = midpoint_3d(r_ear, l_ear)
 
@@ -46,6 +47,52 @@ def head_direction(nose, r_eye, l_eye, r_ear, l_ear):
     normal_head_direction = head_direction / magnitude
 
     return normal_head_direction, eye_midpoint
+
+def head_direction(nose, r_eye, l_eye, r_ear, l_ear):
+    eye_midpoint = (l_eye + r_eye) / 2
+    ear_midpoint = (l_ear + r_ear) / 2
+    A = nose - eye_midpoint
+
+    # calculate
+    ear_nose = np.vstack((ear_midpoint, nose))
+    eye_parallel_direction = ear_nose[1] - ear_nose[0]
+    eye_parallel = np.vstack((eye_midpoint, eye_midpoint + eye_parallel_direction))
+    ear_eye_direction = eye_midpoint - ear_midpoint
+    ear_eye = np.vstack((ear_midpoint, ear_midpoint + ear_eye_direction))
+
+    eye_parallel_direction_unit = eye_parallel_direction / np.linalg.norm(eye_parallel_direction)
+    ear_eye_direction_unit = ear_eye_direction / np.linalg.norm(ear_eye_direction)
+    gaze_direction_3d = (eye_parallel_direction_unit + ear_eye_direction_unit) #/ np.linalg.norm(eye_parallel_direction_unit + ear_eye_direction_unit)
+
+    """
+    # Create the 3D plot
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+
+    # Plot the points
+    ax.scatter(*l_eye, color='blue', label='LeftEye')
+    ax.scatter(*r_eye, color='red', label='r_eye')
+    ax.scatter(*nose, color='green', label='noseCenter')
+    ax.scatter(* eye_midpoint, color='orange', label=' eye_midpoint')
+    #ax.scatter(*A, color='purple', label='A')
+    ax.scatter(*l_ear, color='cyan', label='l_ear')
+    ax.scatter(*r_ear, color='magenta', label='r_ear')
+    ax.scatter(*ear_midpoint, color='yellow', label='ear_midpoint')
+
+    # Plot segments
+    ax.plot(*ear_nose.T, color='blue', label='ear_nose')
+    ax.plot(*eye_parallel.T, color='red', label='eye_parallel')
+    #ax.plot(*ear_eye.T, color='green', label='ear_eye')
+
+    # Plot gaze_direction_3d
+    origin =  eye_midpoint
+    gaze_end =  eye_midpoint + gaze_direction_3d
+    ax.plot([origin[0], gaze_end[0]], [origin[1], gaze_end[1]], [origin[2], gaze_end[2]], color='orange', label='gaze_direction_3d')
+
+    # Show the plot
+    plt.show()
+    """
+    return gaze_direction_3d, eye_midpoint
     """
     angle = np.arccos(np.dot(vector_ear_nose, vector_ear_eye) / (np.linalg.norm(vector_ear_nose) * np.linalg.norm(vector_ear_eye)))
     half_angle = angle / 2
