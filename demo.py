@@ -202,7 +202,7 @@ if __name__ == '__main__':
             width_video_in = 1920
             timestamp = '{:%Y-%m-%d_%H-%M-%S}'.format(datetime.datetime.now())
             output_file = "recorded_videos/"+timestamp+"video"+args.video+".mp4"
-            
+            logging_file = "recorded_videos/"+timestamp+"video"+args.video+".log"
         else:
             width_video_in = 2336
             output_file = args.video
@@ -260,7 +260,7 @@ if __name__ == '__main__':
              
                 head_dirs_3d = np.zeros((poses_3d.shape[0], 3))
                 all_eye_midpoints_3d = np.zeros((poses_3d.shape[0], 3))
-             
+                all_eyes_3d = np.zeros((poses_3d.shape[0],2, 3))
                 for idx, pose_3d in enumerate(poses_3d):
                     # face_names = ['nose' 1, 'r_eye' 15, 'l_eye' 16, 'r_ear' 17, 'l_ear' 18]
                     
@@ -275,16 +275,16 @@ if __name__ == '__main__':
                     head_dir_3d, midpoint_eyes_3d = head_direction(nose, r_eye, l_eye, r_ear, l_ear)
                     frame_datapoint = [frame_index, idx, midpoint_eyes_3d, head_dir_3d]
                     frame_data.append(frame_datapoint)  # Add data to the frame
-                    
+
                     head_dirs_3d[idx] = head_dir_3d
                     all_eye_midpoints_3d[idx] = midpoint_eyes_3d
-                
+                    all_eyes_3d[idx] = [r_eye, l_eye]
                 table = tabulate(frame_data, headers, tablefmt='grid')
                 print(table)
                 # Log data
                 logging.info('\n' + table)
                 edges = (Plotter3d.SKELETON_EDGES + 19 * np.arange(poses_3d.shape[0]).reshape((-1, 1, 1))).reshape((-1, 2))
-                plotter.plot(canvas_3d, poses_3d, edges, head_dirs_3d, all_eye_midpoints_3d, gaze_scale=50)
+                plotter.plot(canvas_3d, poses_3d, edges, head_dirs_3d, all_eye_midpoints_3d, all_eyes_3d, gaze_scale=100)
             
             cv2.imshow(canvas_3d_window_name, canvas_3d)
 
