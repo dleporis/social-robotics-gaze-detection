@@ -44,8 +44,9 @@ class Plotter3d:
             self._plot_edges(img, vertices, edges, R)
         if len(head_dirs_3d) != 0:
             self._plot_gaze(img, head_dirs_3d, all_eye_midpoints_3d, gaze_scale, R)
-            self._plot_field_of_view(img, head_dirs_3d, all_eye_midpoints_3d, all_eyes_3d, gaze_scale, R)
-
+        fov_pyramids = self._plot_field_of_view(img, head_dirs_3d, all_eye_midpoints_3d, all_eyes_3d, gaze_scale, R)
+        return fov_pyramids
+    
     def clear(self, img):
         img.fill(0)
         R = self._get_rotation(theta, phi)
@@ -67,49 +68,21 @@ class Plotter3d:
             cv2.arrowedLine(img, tuple(gaze_origin_2d_int), tuple(gaze_end_2d_int), (255, 255, 0), 1, cv2.LINE_AA)
             cv2.putText(img, str(idx), (gaze_origin_2d_int[0], gaze_origin_2d_int[1]-50), cv2.FONT_HERSHEY_COMPLEX, 1, (0, 255, 0))
 
-    def _plot_field_of_view_old(self, img, gaze_direction_vectors, gaze_origins, scale, R):
-        fov_angles = self.fov_angle * np.pi / 180.0  # Convert to radians
-        fov_vectors = np.zeros_like(gaze_direction_vectors)
-        fov_vectors[:, 2] = -1  # Assume z-axis is pointing in the opposite direction
-        fov_vectors[:, 0] = np.tan(fov_angles / 2)  # Compute the x-axis coordinates of the FOV vectors
-
-        for idx, gaze_origin in enumerate(gaze_origins):
-            fov_start = gaze_origin + gaze_direction_vectors[idx] * scale
-            fov_end = gaze_origin + fov_vectors[idx] * scale
-
-            fov_start_2d = np.dot(fov_start, R)
-            fov_end_2d = np.dot(fov_end, R)
-            fov_start_2d = fov_start_2d * self.scale + self.origin
-            fov_end_2d = fov_end_2d * self.scale + self.origin
-
-            fov_start_2d_int = fov_start_2d.astype(int)
-            fov_end_2d_int = fov_end_2d.astype(int)
-
-            # Draw horizontal field of view
-            cv2.ellipse(img, tuple(fov_start_2d_int), (int(scale * self.scale), int(scale * self.scale)),
-                        0, -fov_angles / 2, fov_angles / 2, (255, 0, 255), 1, cv2.LINE_AA)
-
-            # Draw vertical field of view
-            cv2.ellipse(img, tuple(fov_start_2d_int), (int(scale * self.scale), int(scale * self.scale)),
-                        90, -fov_angles / 2, fov_angles / 2, (255, 0, 255), 1, cv2.LINE_AA)
-
     def _plot_field_of_view(self, img, gaze_direction_vectors, gaze_origins, all_eyes_3d, gaze_scale, R):
         h_fov = np.deg2rad(self.fov_angles[0])  # Horizontal field of view angle
         v_fov = np.deg2rad(self.fov_angles[1])  # Vertical field of view angle
         alpha = h_fov / 2  # Angle in radians
         beta = v_fov /2  # Angle in radians
-        print(all_eyes_3d)
+        all_fov_pyramids = np.zeros((gaze_origins.shape[0],5, 3))
         for idx, gaze_origin in enumerate(gaze_origins):
             length_centroid = np.linalg.norm(gaze_direction_vectors[idx] * gaze_scale)
             base_side_a = np.tan(alpha) * length_centroid * 2
             base_side_b = np.tan(beta) * length_centroid * 2
              # Calculate the base center
             base_center = gaze_origin + gaze_direction_vectors[idx] * gaze_scale
-            print(base_center)
             #base_points = np.zeros((4, 3))
             # 1 Calculate the direction of the line
             all_eyes_3d[idx]
-            print(all_eyes_3d[idx])
             base_h_direction = all_eyes_3d[idx][1] - all_eyes_3d[idx][0]
 
             # Calculate the normalized direction of the line
@@ -157,44 +130,18 @@ class Plotter3d:
             # Define the base rectangle by its corners
             base_rectangle_2d_int = np.vstack((corner_1_2d_int, corner_2_2d_int, corner_3_2d_int, corner_4_2d_int, corner_1_2d_int))
             # Draw the lines of the base rectangle
-            # Draw the lines of the base rectangle
-            print("base_rectangle_2d")
-            print(base_rectangle_2d_int)
-            print("base_rectangle_2d[0]")
-            print(base_rectangle_2d_int[0])
-            print("base_rectangle_2d[1]")
-            print(base_rectangle_2d_int[1])
-            print("base_rectangle_2d[2]")
-            print(base_rectangle_2d_int[2])
-            print("base_rectangle_2d[3]")
-            print(base_rectangle_2d_int[3])
-            
             gaze_origin_2d = np.dot(gaze_origin, R) * self.scale + self.origin
             # Convert the points to integers
             gaze_origin_2d_int = gaze_origin_2d.astype(int)
-            """
-            gaze_origin_2d = np.dot(gaze_origin, R)
-            gaze_end_2d = np.dot(gaze_end, R)
-            # Convert the points to integers
-            self.gaze_origin_2d_int = gaze_origin_2d.astype(int)
-            
-            self.gaze_end_2d_int = gaze_end_2d.astype(int)
-
-            # Draw the line on the canvas
-            cv2.arrowedLine(img, tuple(self.gaze_origin_2d_int), tuple(self.gaze_end_2d_int), (255, 255, 0), 1, cv2.LINE_AA)
-            """
             for i in range(4):
-                print("i:" + str(i))
-                print("tuple(base_rectangle_2d_int[i]), tuple(base_rectangle_2d_int[i+1])")
-                print(tuple(base_rectangle_2d_int[i]), tuple(base_rectangle_2d_int[i+1]))
                 cv2.line(img, tuple(base_rectangle_2d_int[i]), tuple(base_rectangle_2d_int[i+1]), (255, 0, 255), 1, cv2.LINE_AA)
-                print("tuple(base_rectangle_2d_int[i]), tuple(gaze_origin)")
-                print(tuple(base_rectangle_2d_int[i]), tuple(gaze_origin_2d_int))
                 cv2.line(img, tuple(base_rectangle_2d_int[i]), tuple(gaze_origin_2d_int), (255, 0, 255), 1, cv2.LINE_AA)
-            print("base done")
             # Draw the lines of the base
             #cv2.line(img, tuple(base_h[0].astype(int)), tuple(base_h[1].astype(int)), (0, 255, 255), 1, cv2.LINE_AA)
             #cv2.line(img, tuple(base_v[0].astype(int)), tuple(base_v[1].astype(int)), (0, 255, 255), 1, cv2.LINE_AA)
+            all_fov_pyramids[idx] = [gaze_origin, corner_1, corner_2, corner_3, corner_4]
+        
+        return all_fov_pyramids
     
     def _draw_axes(self, img, R):
         axes_2d = np.dot(self.axes, R)

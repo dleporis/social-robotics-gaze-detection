@@ -9,9 +9,10 @@ import datetime
 from modules.input_reader import VideoReader, ImageReader
 from modules.draw import Plotter3d, draw_poses
 from modules.parse_poses import parse_poses
+from modules.looking_at import point_in_cone
 import logging
 from tabulate import tabulate
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 
 def rotate_poses(poses_3d, R, t):
     R_inv = np.linalg.inv(R)
@@ -217,7 +218,7 @@ if __name__ == '__main__':
         video_out = cv2.VideoWriter(output_file, fourcc, 30.0, (width_video_in+canvas_3d.shape[1], height_video_in))
         # Set up logging
         logging.basicConfig(filename=logging_file, level=logging.INFO)
-        headers = ['Frame', 'Person ID', 'midpoint_eyes_3d', "head_dir_3d"]
+        headers = ['Frame', 'Person ID', 'midpoint_eyes_3d', "head_dir_3d", "sees_people"]
         is_video = True
     base_height = args.height_size
     fx = args.fx
@@ -242,12 +243,10 @@ if __name__ == '__main__':
             inference_result = net.infer(scaled_img)
             poses_3d, poses_2d = parse_poses(inference_result, input_scale, stride, fx, is_video)
             
-            
-            
             plotter.clear(canvas_3d)
             edges = []
             if len(poses_3d):
-                #print("############### Frame number: {} ###############".format(frame_index))
+                print("############### Frame number: {} ###############".format(frame_index))
                 poses_3d = rotate_poses(poses_3d, R, t)
                 poses_3d_copy = poses_3d.copy()
                 x = poses_3d_copy[:, 0::4]
@@ -261,10 +260,17 @@ if __name__ == '__main__':
                 head_dirs_3d = np.zeros((poses_3d.shape[0], 3))
                 all_eye_midpoints_3d = np.zeros((poses_3d.shape[0], 3))
                 all_eyes_3d = np.zeros((poses_3d.shape[0],2, 3))
-                for idx, pose_3d in enumerate(poses_3d):
+
+                gaze_scale = 100
+                fov_angle = 120
+                cone_angle = np.deg2rad(fov_angle / 2)
+                seen_people_matrix = np.zeros((poses_3d.shape[0], poses_3d.shape[0]))
+                
+                for observer_idx, pose_3d in enumerate(poses_3d):
+                    seen_people = []
                     # face_names = ['nose' 1, 'r_eye' 15, 'l_eye' 16, 'r_ear' 17, 'l_ear' 18]
                     
-                    #print("\n#### Person number: {}".format(idx))
+                    #print("\n#### Person number: {}".format(observer_idx))
                     
                     nose = pose_3d[1]
                     r_eye = pose_3d[15]
@@ -273,19 +279,43 @@ if __name__ == '__main__':
                     l_ear = pose_3d[18]
                     
                     head_dir_3d, midpoint_eyes_3d = head_direction(nose, r_eye, l_eye, r_ear, l_ear)
-                    frame_datapoint = [frame_index, idx, midpoint_eyes_3d, head_dir_3d]
+                    
+
+                    head_dirs_3d[observer_idx] = head_dir_3d
+                    all_eye_midpoints_3d[observer_idx] = midpoint_eyes_3d
+                    all_eyes_3d[observer_idx] = [r_eye, l_eye]
+
+                     
+                    for observed_idx, other_pose in enumerate(poses_3d):
+                        print("Observer: {} Observed person: {}".format(observer_idx, observed_idx))
+                        if observed_idx == observer_idx:
+                            print("SKIPPING: Observer {} cannot observe person {} cause it is him/her -self.".format(observer_idx, observed_idx))
+                            continue
+                        is_inside_fov = False
+                        point = 0
+                        while is_inside_fov == False and point < 19:
+                            #print(other_pose[point])
+                            is_inside_fov = point_in_cone(midpoint_eyes_3d, head_dir_3d, cone_angle, other_pose[point], gaze_scale=gaze_scale)
+                            point = point + 1
+
+                        if is_inside_fov == True:
+                            print("Observer: {} sees observed person: {}\n".format(observer_idx, observed_idx))
+                            seen_people = np.append(seen_people, observed_idx)
+                        else:
+                            print("Observer: {} cannot see person: {}\n".format(observer_idx, observed_idx))
+                            
+                    print("Observer: {} sees people: {}\n".format(observer_idx, seen_people))
+                    frame_datapoint = [frame_index, observer_idx, midpoint_eyes_3d, head_dir_3d, seen_people]
                     frame_data.append(frame_datapoint)  # Add data to the frame
 
-                    head_dirs_3d[idx] = head_dir_3d
-                    all_eye_midpoints_3d[idx] = midpoint_eyes_3d
-                    all_eyes_3d[idx] = [r_eye, l_eye]
                 table = tabulate(frame_data, headers, tablefmt='grid')
                 print(table)
                 # Log data
                 logging.info('\n' + table)
                 edges = (Plotter3d.SKELETON_EDGES + 19 * np.arange(poses_3d.shape[0]).reshape((-1, 1, 1))).reshape((-1, 2))
-                plotter.plot(canvas_3d, poses_3d, edges, head_dirs_3d, all_eye_midpoints_3d, all_eyes_3d, gaze_scale=100)
+                fov_pyramids = plotter.plot(canvas_3d, poses_3d, edges, head_dirs_3d, all_eye_midpoints_3d, all_eyes_3d, gaze_scale=gaze_scale)
             
+
             cv2.imshow(canvas_3d_window_name, canvas_3d)
 
             
@@ -320,7 +350,7 @@ if __name__ == '__main__':
                 while (key != p_code
                     and key != esc_code
                     and key != space_code):
-                    plotter.plot(canvas_3d, poses_3d, edges, head_dirs_3d, all_eye_midpoints_3d, gaze_scale=50)
+                    fov_pyramids = plotter.plot(canvas_3d, poses_3d, edges, head_dirs_3d, all_eye_midpoints_3d, all_eyes_3d, gaze_scale=100)
                     cv2.imshow(canvas_3d_window_name, canvas_3d)
                     key = cv2.waitKey(33)
                 if key == esc_code:
