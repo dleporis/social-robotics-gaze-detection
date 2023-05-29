@@ -175,7 +175,9 @@ if __name__ == '__main__':
         net = InferenceEnginePyTorch(args.model, args.device, use_tensorrt=args.use_tensorrt)
 
     canvas_3d = np.zeros(( 1080, 1080, 3), dtype=np.uint8)
-    plotter = Plotter3d(canvas_3d.shape[:2])
+    fov_angle = 20
+    cone_angle = np.deg2rad(fov_angle / 2)
+    plotter = Plotter3d(canvas_3d.shape[:2], cone_angle)
     canvas_3d_window_name = 'Canvas 3D'
     cv2.namedWindow(canvas_3d_window_name, cv2.WINDOW_NORMAL)
     cv2.setMouseCallback(canvas_3d_window_name, Plotter3d.mouse_callback)
@@ -262,8 +264,7 @@ if __name__ == '__main__':
                 all_eyes_3d = np.zeros((poses_3d.shape[0],2, 3))
 
                 gaze_scale = 100
-                fov_angle = 120
-                cone_angle = np.deg2rad(fov_angle / 2)
+                
                 seen_people_matrix = np.zeros((poses_3d.shape[0], poses_3d.shape[0]))
                 
                 for observer_idx, pose_3d in enumerate(poses_3d):
@@ -303,7 +304,7 @@ if __name__ == '__main__':
                             seen_people = np.append(seen_people, observed_idx)
                         else:
                             print("Observer: {} cannot see person: {}\n".format(observer_idx, observed_idx))
-                            
+
                     print("Observer: {} sees people: {}\n".format(observer_idx, seen_people))
                     frame_datapoint = [frame_index, observer_idx, midpoint_eyes_3d, head_dir_3d, seen_people]
                     frame_data.append(frame_datapoint)  # Add data to the frame
@@ -313,7 +314,7 @@ if __name__ == '__main__':
                 # Log data
                 logging.info('\n' + table)
                 edges = (Plotter3d.SKELETON_EDGES + 19 * np.arange(poses_3d.shape[0]).reshape((-1, 1, 1))).reshape((-1, 2))
-                fov_pyramids = plotter.plot(canvas_3d, poses_3d, edges, head_dirs_3d, all_eye_midpoints_3d, all_eyes_3d, gaze_scale=gaze_scale)
+                plotter.plot(canvas_3d, poses_3d, edges, head_dirs_3d, all_eye_midpoints_3d, gaze_scale=gaze_scale)
             
 
             cv2.imshow(canvas_3d_window_name, canvas_3d)

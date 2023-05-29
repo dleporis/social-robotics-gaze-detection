@@ -14,12 +14,13 @@ scale_dy = 800
 class Plotter3d:
     SKELETON_EDGES = np.array([[11, 10], [10, 9], [9, 0], [0, 3], [3, 4], [4, 5], [0, 6], [6, 7], [7, 8], [0, 12],
                                [12, 13], [13, 14], [0, 1], [1, 15], [15, 16], [1, 17], [17, 18], [6, 12] ]) # 19 eye_midpoint - 20 gaze direction vector end
-    def __init__(self, canvas_size, origin=(0.5, 0.5), scale=1):
+    def __init__(self, canvas_size, cone_angle, origin=(0.5, 0.5), scale=1):
         self.origin = np.array([origin[1] * canvas_size[1], origin[0] * canvas_size[0]], dtype=np.float32)  # x, y
         self.scale = np.float32(scale)
         self.theta = 0
         self.phi = 0
         self.fov_angles = [120, 60]
+        self.cone_angle = cone_angle
         self.FOV_COLOR = (255,0,255)
         self.FOV_OPACITY = 50
         axis_length = 400
@@ -35,7 +36,7 @@ class Plotter3d:
                                   [-axis_length / 2 + step_id * step, axis_length / 2, 0]], dtype=np.float32))
         self.axes = np.array(axes)
 
-    def plot(self, img, vertices, edges, head_dirs_3d, all_eye_midpoints_3d, all_eyes_3d, gaze_scale=50):
+    def plot(self, img, vertices, edges, head_dirs_3d, all_eye_midpoints_3d, gaze_scale=50):
         global theta, phi
         img.fill(0)
         R = self._get_rotation(theta, phi)
@@ -44,9 +45,15 @@ class Plotter3d:
             self._plot_edges(img, vertices, edges, R)
         if len(head_dirs_3d) != 0:
             self._plot_gaze(img, head_dirs_3d, all_eye_midpoints_3d, gaze_scale, R)
-        fov_pyramids = self._plot_field_of_view(img, head_dirs_3d, all_eye_midpoints_3d, all_eyes_3d, gaze_scale, R)
-        return fov_pyramids
+            self._plot_field_of_view(img, head_dirs_3d, all_eye_midpoints_3d, gaze_scale, R)
     
+    
+
+    def _plot_field_of_view(self, img, gaze_direction_vectors, gaze_origins, gaze_scale, R):
+        pass
+        #for idx, gaze_origin in enumerate(gaze_origins):
+        #    gaze_end = gaze_origin + gaze_direction_vectors[idx] * gaze_scale
+
     def clear(self, img):
         img.fill(0)
         R = self._get_rotation(theta, phi)
@@ -54,21 +61,58 @@ class Plotter3d:
         
     def _plot_gaze(self, img, gaze_direction_vectors, gaze_origins, gaze_scale, R):
         for idx, gaze_origin in enumerate(gaze_origins):
-            gaze_end = gaze_origin + gaze_direction_vectors[idx] * gaze_scale 
+            gaze_end = gaze_origin + gaze_direction_vectors[idx] * gaze_scale
+            cone_axis_scaled = gaze_origin-gaze_end
+            gaze_magnitude = np.linalg.norm(cone_axis_scaled)
+            print("gaze_magnitude")
+            print(gaze_magnitude)
+            print("self.cone_angle")
+            print(self.cone_angle)
+            
             gaze_origin_2d = np.dot(gaze_origin, R)
             gaze_end_2d = np.dot(gaze_end, R)
             gaze_origin_2d = gaze_origin_2d * self.scale + self.origin
             gaze_end_2d = gaze_end_2d * self.scale + self.origin
+            
             # Convert the points to integers
             gaze_origin_2d_int = gaze_origin_2d.astype(int)
-            
             gaze_end_2d_int = gaze_end_2d.astype(int)
 
-            # Draw the line on the canvas
+            # Draw the gaze line on the canvas
             cv2.arrowedLine(img, tuple(gaze_origin_2d_int), tuple(gaze_end_2d_int), (255, 255, 0), 1, cv2.LINE_AA)
             cv2.putText(img, str(idx), (gaze_origin_2d_int[0], gaze_origin_2d_int[1]-50), cv2.FONT_HERSHEY_COMPLEX, 1, (0, 255, 0))
 
-    def _plot_field_of_view(self, img, gaze_direction_vectors, gaze_origins, all_eyes_3d, gaze_scale, R):
+            
+            cone_base_radius = gaze_magnitude * np.tan(self.cone_angle)
+            cone_axis_normalized = cone_axis_scaled / gaze_magnitude
+            perpendicular_vector = np.array([-cone_axis_normalized[1], cone_axis_normalized[0], 0])
+            perpendicular_vector_normalized = perpendicular_vector / np.linalg.norm(perpendicular_vector)
+            resolution = 12
+            base_points_2d_int = []
+
+            for i in range(resolution):
+                angle = 2 * np.pi * i / resolution
+                base_point = gaze_end + cone_base_radius * (perpendicular_vector_normalized * np.cos(angle) + cone_axis_normalized * np.sin(angle))
+                #base_point = gaze_end + cone_base_radius * (perpendicular_vector_normalized * np.cos(angle)) + cone_axis_normalized * (cone_base_radius * np.sin(angle))
+                #base_point = gaze_end + cone_base_radius * (perpendicular_vector_normalized * np.cos(angle) + cone_axis_normalized * np.sin(angle))
+                base_point_2d = np.dot(base_point, R)
+                base_point_2d = base_point_2d * self.scale + self.origin
+                base_point_2d_int = tuple(base_point_2d.astype(int))
+
+                #plot origin to circle point
+                cv2.line(img, tuple(gaze_origin_2d_int), base_point_2d_int, (255, 0, 255), 1, cv2.LINE_AA)
+                base_points_2d_int.append(base_point_2d_int)
+            print(base_points_2d_int)
+            for i in range(resolution):
+                print("plotting circle")
+                print(i)
+                # plot lines between circle points
+                cv2.line(img, base_points_2d_int[i], base_points_2d_int[(i+1) % resolution], (255, 0, 255), 1, cv2.LINE_AA)
+            
+            
+                
+
+    def _plot_field_of_view_pyramids(self, img, gaze_direction_vectors, gaze_origins, all_eyes_3d, gaze_scale, R):
         h_fov = np.deg2rad(self.fov_angles[0])  # Horizontal field of view angle
         v_fov = np.deg2rad(self.fov_angles[1])  # Vertical field of view angle
         alpha = h_fov / 2  # Angle in radians
