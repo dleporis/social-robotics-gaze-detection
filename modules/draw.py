@@ -2,7 +2,9 @@ import math
 
 import cv2
 import numpy as np
+from PIL import Image, ImageFont, ImageDraw
 import contextlib
+import networkx as nx
 
 previous_position = []
 theta, phi = 3.1415/4, -3.1415/6
@@ -15,6 +17,7 @@ class Plotter3d:
     SKELETON_EDGES = np.array([[11, 10], [10, 9], [9, 0], [0, 3], [3, 4], [4, 5], [0, 6], [6, 7], [7, 8], [0, 12],
                                [12, 13], [13, 14], [0, 1], [1, 15], [15, 16], [1, 17], [17, 18], [6, 12] ]) # 19 eye_midpoint - 20 gaze direction vector end
     def __init__(self, canvas_size, cone_angle, origin=(0.5, 0.5), scale=1):
+        self.canvas_size = canvas_size
         self.origin = np.array([origin[1] * canvas_size[1], origin[0] * canvas_size[0]], dtype=np.float32)  # x, y
         self.scale = np.float32(scale)
         self.theta = 0
@@ -35,9 +38,18 @@ class Plotter3d:
             axes.append(np.array([[-axis_length / 2 + step_id * step, -axis_length / 2, 0],
                                   [-axis_length / 2 + step_id * step, axis_length / 2, 0]], dtype=np.float32))
         self.axes = np.array(axes)
+        self.person_colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0), (255, 0, 255),
+                (0, 255, 255), (128, 0, 0), (0, 128, 0), (0, 0, 128), (128, 128, 128)]
 
-    def plot(self, img, vertices, edges, head_dirs_3d, all_eye_midpoints_3d, gaze_scale=50):
+    def plot(self, img, vertices, edges, head_dirs_3d, all_eye_midpoints_3d, adjacency_table, adjacency_matrix, gaze_scale=50):
         global theta, phi
+        """
+        adjacency_matrix = np.array([[0, 1, 1, 0, 1],
+                       [1, 0, 0, 0, 1],
+                       [0, 0, 0, 0, 1],
+                       [0, 0, 0, 0, 0],
+                       [0, 0, 0, 0, 0]])
+        """
         img.fill(0)
         R = self._get_rotation(theta, phi)
         self._draw_axes(img, R)
@@ -45,14 +57,9 @@ class Plotter3d:
             self._plot_edges(img, vertices, edges, R)
         if len(head_dirs_3d) != 0:
             self._plot_gaze(img, head_dirs_3d, all_eye_midpoints_3d, gaze_scale, R)
-            self._plot_field_of_view(img, head_dirs_3d, all_eye_midpoints_3d, gaze_scale, R)
+            self._plot_adjecency_graph(img, adjacency_matrix)
+            self._write_table(img, adjacency_table)
     
-    
-
-    def _plot_field_of_view(self, img, gaze_direction_vectors, gaze_origins, gaze_scale, R):
-        pass
-        #for idx, gaze_origin in enumerate(gaze_origins):
-        #    gaze_end = gaze_origin + gaze_direction_vectors[idx] * gaze_scale
 
     def clear(self, img):
         img.fill(0)
@@ -61,14 +68,19 @@ class Plotter3d:
         
     def _plot_gaze(self, img, gaze_direction_vectors, gaze_origins, gaze_scale, R):
         for idx, gaze_origin in enumerate(gaze_origins):
+            gaze_dir_vectors_magnitude = np.linalg.norm(gaze_direction_vectors[idx])
+            print("gaze_dir_vectors_magnitude")
+            print(gaze_dir_vectors_magnitude)
             gaze_end = gaze_origin + gaze_direction_vectors[idx] * gaze_scale
-            cone_axis_scaled = gaze_origin-gaze_end
-            gaze_magnitude = np.linalg.norm(cone_axis_scaled)
+            gaze_direction_vector_scaled = gaze_origin-gaze_end
+            gaze_magnitude = np.linalg.norm(gaze_direction_vector_scaled)
+            gaze_direction_norm = gaze_direction_vectors[idx] / gaze_magnitude
             print("gaze_magnitude")
             print(gaze_magnitude)
-            print("self.cone_angle")
-            print(self.cone_angle)
-            
+            #print("self.cone_angle")
+            #print(self.cone_angle)
+            """
+            # convert to 2d
             gaze_origin_2d = np.dot(gaze_origin, R)
             gaze_end_2d = np.dot(gaze_end, R)
             gaze_origin_2d = gaze_origin_2d * self.scale + self.origin
@@ -76,42 +88,111 @@ class Plotter3d:
             
             # Convert the points to integers
             gaze_origin_2d_int = gaze_origin_2d.astype(int)
+            gaze_origin_2d_int
             gaze_end_2d_int = gaze_end_2d.astype(int)
+            """
+            # all in one convert to 2d integers
+            gaze_origin_2d_int = self._float3d_to_2d_int( gaze_origin, R)
+            gaze_end_2d_int = self._float3d_to_2d_int( gaze_end, R)
 
             # Draw the gaze line on the canvas
-            cv2.arrowedLine(img, tuple(gaze_origin_2d_int), tuple(gaze_end_2d_int), (255, 255, 0), 1, cv2.LINE_AA)
-            cv2.putText(img, str(idx), (gaze_origin_2d_int[0], gaze_origin_2d_int[1]-50), cv2.FONT_HERSHEY_COMPLEX, 1, (0, 255, 0))
-
+            cv2.arrowedLine(img, tuple(gaze_origin_2d_int), tuple(gaze_end_2d_int), (255, 255, 0), 2, cv2.LINE_AA)
+            cv2.putText(img, str(idx), (gaze_origin_2d_int[0], gaze_origin_2d_int[1]-50), cv2.FONT_HERSHEY_COMPLEX, 1, self.person_colors[idx % len(self.person_colors)])
             
+            # plot adjecency matrix
+            #cv2.putText(img, adjacency_table, (200, 200), cv2.FONT_HERSHEY_SIMPLEX, 0.25, (0, 255, 0),  cv2.LINE_AA)
+            # plot the cone
             cone_base_radius = gaze_magnitude * np.tan(self.cone_angle)
-            cone_axis_normalized = cone_axis_scaled / gaze_magnitude
-            perpendicular_vector = np.array([-cone_axis_normalized[1], cone_axis_normalized[0], 0])
-            perpendicular_vector_normalized = perpendicular_vector / np.linalg.norm(perpendicular_vector)
+            cone_axis_normalized = gaze_direction_vector_scaled / gaze_magnitude
+            #print("gaze_direction_norm")
+            #print(gaze_direction_norm)
+            #print("cone_axis_normalized")
+            #print(cone_axis_normalized)
+            #perpendicular_vector = np.array([-cone_axis_normalized[1], cone_axis_normalized[0], 0])
+            #perpendicular_vector_normalized = perpendicular_vector / np.linalg.norm(perpendicular_vector)
             resolution = 12
-            base_points_2d_int = []
+            # Generate points for the base circle centered at the origin
+            theta = np.linspace(0, 2 * np.pi, resolution)
+            circle_points = np.column_stack([cone_base_radius * np.cos(theta), cone_base_radius * np.sin(theta), np.zeros_like(theta)])
+            # Calculate the rotation axis and angle to align the circle with gaze_direction
+            rotation_axis = np.cross([0, 0, 1], gaze_direction_norm)
+            rotation_angle = np.arccos(np.dot([0, 0, 1], gaze_direction_norm))
+            # Apply the rotation to the circle points
+            rotated_circle_points = np.dot(circle_points, self._rotation_matrix(rotation_axis, rotation_angle))
+            # Translate the circle points to align with gaze_end
+            translated_circle_points = rotated_circle_points + gaze_end
+            #print("translated_circle_points")
+            #print(translated_circle_points)
+            translated_circle_points_2d_int = []
+            for circle_point in translated_circle_points:
+                circle_point_2d_int = self._float3d_to_2d_int(circle_point, R)
+                # plot lines from origing to the cone base circle
+                
+                cv2.line(img, tuple(gaze_origin_2d_int), circle_point_2d_int, self.person_colors[idx % len(self.person_colors)], 1, cv2.LINE_AA)
+                translated_circle_points_2d_int.append(tuple(circle_point_2d_int))
+            #print("translated_circle_points_2d_int")
+            #print(translated_circle_points_2d_int)
 
-            for i in range(resolution):
-                angle = 2 * np.pi * i / resolution
-                base_point = gaze_end + cone_base_radius * (perpendicular_vector_normalized * np.cos(angle) + cone_axis_normalized * np.sin(angle))
-                #base_point = gaze_end + cone_base_radius * (perpendicular_vector_normalized * np.cos(angle)) + cone_axis_normalized * (cone_base_radius * np.sin(angle))
-                #base_point = gaze_end + cone_base_radius * (perpendicular_vector_normalized * np.cos(angle) + cone_axis_normalized * np.sin(angle))
-                base_point_2d = np.dot(base_point, R)
-                base_point_2d = base_point_2d * self.scale + self.origin
-                base_point_2d_int = tuple(base_point_2d.astype(int))
-
-                #plot origin to circle point
-                cv2.line(img, tuple(gaze_origin_2d_int), base_point_2d_int, (255, 0, 255), 1, cv2.LINE_AA)
-                base_points_2d_int.append(base_point_2d_int)
-            print(base_points_2d_int)
-            for i in range(resolution):
-                print("plotting circle")
-                print(i)
-                # plot lines between circle points
-                cv2.line(img, base_points_2d_int[i], base_points_2d_int[(i+1) % resolution], (255, 0, 255), 1, cv2.LINE_AA)
-            
-            
+            for index, point_2d in enumerate(translated_circle_points_2d_int):
+                cv2.line(img, translated_circle_points_2d_int[index], translated_circle_points_2d_int[(index+1) % len(translated_circle_points_2d_int)], self.person_colors[idx % len(self.person_colors)], 1, cv2.LINE_AA)
                 
 
+    def _write_table(self, img, table_data):
+       
+        # Split the table data by newlines
+        table_rows = table_data.strip().split('\n')
+
+        # Define font settings
+        font_face = cv2.FONT_HERSHEY_DUPLEX
+        font_scale = 0.5
+        font_thickness = 2
+
+        # Define starting position
+        width = self.canvas_size[0]
+        height = self.canvas_size[1]
+        x = 0 
+        y = int(height * 0.75) 
+        line_height = 20
+
+        # Tab settings
+        tab_width = 120  # Adjust this value to control the tab spacing
+
+        # Draw the table data
+        for row in table_rows:
+            # Split row by tabs
+            if '+' in row:
+                columns = row.split('+')
+
+            else:
+                columns = row.split('|')
+
+            # Draw each column
+            for col_idx, column in enumerate(columns):
+                cv2.putText(img, column, (x + col_idx * tab_width, y), font_face, font_scale,
+                            (0, 0, 255), thickness=font_thickness)
+
+            y += line_height
+
+        
+
+
+    def _float3d_to_2d_int(self, input3d, R):
+        output2d = np.dot(input3d, R) * self.scale + self.origin
+        output2d_int = output2d.astype(int)
+        return output2d_int
+    
+    def _rotation_matrix(self, axis, angle):
+        """
+        Generate a rotation matrix for a rotation around the given axis by the specified angle.
+        """
+        axis = np.asarray(axis)
+        axis = axis / np.linalg.norm(axis)
+        a = np.cos(angle / 2.0)
+        b, c, d = -axis * np.sin(angle / 2.0)
+        return np.array([[a*a + b*b - c*c - d*d, 2 * (b*c - a*d), 2 * (b*d + a*c)],
+                        [2 * (b*c + a*d), a*a + c*c - b*b - d*d, 2 * (c*d - a*b)],
+                        [2 * (b*d - a*c), 2 * (c*d + a*b), a*a + d*d - b*b - c*c]])
+    
     def _plot_field_of_view_pyramids(self, img, gaze_direction_vectors, gaze_origins, all_eyes_3d, gaze_scale, R):
         h_fov = np.deg2rad(self.fov_angles[0])  # Horizontal field of view angle
         v_fov = np.deg2rad(self.fov_angles[1])  # Vertical field of view angle
@@ -187,6 +268,108 @@ class Plotter3d:
         
         return all_fov_pyramids
     
+    def _plot_adjecency_graph(self, image, adj_matrix):
+        
+        """
+        # Sample adjacency matrix
+        adj_matrix = np.array([[0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0],
+                            [1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
+                            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
+                            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]])
+
+
+        adj_matrix = np.array([[0, 1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                            [1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]])
+        """
+
+        """
+        Plot the adjacency graph on the given image.
+
+        Args:
+        - image: The input image.
+        - adj_matrix: The adjacency matrix representing the graph.
+        """
+
+        # Create a networkx graph from the adjacency matrix
+        graph = nx.DiGraph(adj_matrix)
+
+        # Perform layout for the graph
+        layout = nx.kamada_kawai_layout(graph)
+
+        # Set image size and create an empty image
+        graph_image_size = (300, 300)
+        graph_image = np.ones((graph_image_size[0], graph_image_size[1], 3), np.uint8) * 255
+
+        # Calculate the scaling factor based on the graph size and image size
+        graph_size = max(max(abs(pos[0]), abs(pos[1])) for pos in layout.values())
+        prev_scale_factor = 120
+        scale_factor = min(graph_image_size) / (2.5 * graph_size)
+        if math.isinf(scale_factor):
+            scale_factor = prev_scale_factor
+        # Draw the graph on the image
+        for edge in graph.edges:
+            start_node = edge[0]
+            end_node = edge[1]
+            start_point = (int(layout[start_node][0] * scale_factor + graph_image_size[0] / 2),
+                        int(layout[start_node][1] * scale_factor + graph_image_size[1] / 2))
+            end_point = (int(layout[end_node][0] * scale_factor + graph_image_size[0] / 2),
+                        int(layout[end_node][1] * scale_factor + graph_image_size[1] / 2))
+            cv2.arrowedLine(graph_image, start_point, end_point, self.person_colors[start_node % len(self.person_colors)], 2, tipLength=0.25)
+
+        for node, position in layout.items():
+            if math.isnan(scale_factor):
+                print("IS NAN\nIS NAN\nIS NAN\nIS NAN\nIS NAN\nIS NAN\nIS NAN\nIS NAN\nIS NAN\nIS NAN\nIS NAN\nIS NAN\nIS NAN\nIS NAN\nIS NAN\nIS NAN\nIS NAN\nIS NAN\nIS NAN\nIS NAN\nIS NAN\nIS NAN\nIS NAN\nIS NAN\nIS NAN\nIS NAN\nIS NAN\nIS NAN\nIS NAN\nIS NAN\nIS NAN\nIS NAN\nIS NAN\nIS NAN\nIS NAN\nIS NAN\n")
+                continue
+            print("position[0]")
+            print(position[0])
+            print("position[1]")
+            print(position[1])
+            print("scale_factor")
+            print(scale_factor)
+            print("graph_image_size[0]")
+            print(graph_image_size[0])
+            print("graph_image_size[1]")
+            print(graph_image_size[1])
+            center = (int(position[0] * scale_factor + graph_image_size[0] / 2),
+                    int(position[1] * scale_factor + graph_image_size[1] / 2))
+            cv2.circle(graph_image, center, 10, self.person_colors[node % len(self.person_colors)], -1)
+            cv2.putText(graph_image, str(node), (center[0] + 5, center[1] + 5), cv2.FONT_HERSHEY_COMPLEX, 1.2, (0, 0, 0), 2)
+
+        # Calculate the offset values to align the images
+        img_size = image.shape[:2]
+        graph_size = graph_image.shape[:2]
+        x_offset = img_size[1] - graph_size[1]
+        y_offset = img_size[0] - graph_size[0]
+
+        # Paste the graph image on top of the original image
+        image[y_offset:y_offset + graph_size[0], x_offset:x_offset + graph_size[1]] = graph_image
+
     def _draw_axes(self, img, R):
         axes_2d = np.dot(self.axes, R)
         axes_2d = axes_2d * self.scale + self.origin

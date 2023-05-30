@@ -63,8 +63,10 @@ def head_direction(nose, r_eye, l_eye, r_ear, l_ear):
 
     eye_parallel_direction_unit = eye_parallel_direction / np.linalg.norm(eye_parallel_direction)
     ear_eye_direction_unit = ear_eye_direction / np.linalg.norm(ear_eye_direction)
-    gaze_direction_3d = (eye_parallel_direction_unit + ear_eye_direction_unit) #/ np.linalg.norm(eye_parallel_direction_unit + ear_eye_direction_unit)
-
+    gaze_direction_3d = (eye_parallel_direction_unit + ear_eye_direction_unit) / np.linalg.norm(eye_parallel_direction_unit + ear_eye_direction_unit)
+    gaze_direction_3d_length = np.linalg.norm(gaze_direction_3d)
+    print("gaze_direction_3d_length")
+    print(gaze_direction_3d_length)
     """
     # Create the 3D plot
     fig = plt.figure()
@@ -175,7 +177,7 @@ if __name__ == '__main__':
         net = InferenceEnginePyTorch(args.model, args.device, use_tensorrt=args.use_tensorrt)
 
     canvas_3d = np.zeros(( 1080, 1080, 3), dtype=np.uint8)
-    fov_angle = 20
+    fov_angle = 120
     cone_angle = np.deg2rad(fov_angle / 2)
     plotter = Plotter3d(canvas_3d.shape[:2], cone_angle)
     canvas_3d_window_name = 'Canvas 3D'
@@ -265,8 +267,9 @@ if __name__ == '__main__':
 
                 gaze_scale = 100
                 
-                seen_people_matrix = np.zeros((poses_3d.shape[0], poses_3d.shape[0]))
-                
+                seen_people_adjacency_matrix = np.zeros((poses_3d.shape[0], poses_3d.shape[0]))
+                print("seen_people_matrix")
+                print(seen_people_adjacency_matrix)
                 for observer_idx, pose_3d in enumerate(poses_3d):
                     seen_people = []
                     # face_names = ['nose' 1, 'r_eye' 15, 'l_eye' 16, 'r_ear' 17, 'l_ear' 18]
@@ -302,19 +305,39 @@ if __name__ == '__main__':
                         if is_inside_fov == True:
                             print("Observer: {} sees observed person: {}\n".format(observer_idx, observed_idx))
                             seen_people = np.append(seen_people, observed_idx)
+                            seen_people_adjacency_matrix[observer_idx, observed_idx] = 1
+
                         else:
                             print("Observer: {} cannot see person: {}\n".format(observer_idx, observed_idx))
 
                     print("Observer: {} sees people: {}\n".format(observer_idx, seen_people))
                     frame_datapoint = [frame_index, observer_idx, midpoint_eyes_3d, head_dir_3d, seen_people]
                     frame_data.append(frame_datapoint)  # Add data to the frame
+                    print("seen_people")
+                    print(seen_people)
 
                 table = tabulate(frame_data, headers, tablefmt='grid')
                 print(table)
+                # Create adjacency table
+                header = ['Observer'] + ['Sees {}'.format(i) for i in range(poses_3d.shape[0])]
+                print("seen_people_adjacency_matrix")
+                print(seen_people_adjacency_matrix)
+                print(type(seen_people_adjacency_matrix))
+                rows = []
+                for observer_idx in range(poses_3d.shape[0]):
+                    row = [observer_idx] + [seen_people_adjacency_matrix[observer_idx][i] for i in range(poses_3d.shape[0])]
+                    rows.append(row)
+
+                # Print the table using tabulate
+                table_format = 'grid'
+                adjacency_table = tabulate(rows, headers=header, tablefmt=table_format)
+                print(adjacency_table)
+
                 # Log data
-                logging.info('\n' + table)
+                logging.info('\n' + table + '\n' + adjacency_table)
                 edges = (Plotter3d.SKELETON_EDGES + 19 * np.arange(poses_3d.shape[0]).reshape((-1, 1, 1))).reshape((-1, 2))
-                plotter.plot(canvas_3d, poses_3d, edges, head_dirs_3d, all_eye_midpoints_3d, gaze_scale=gaze_scale)
+                #plotter.plot(canvas_3d, poses_3d, edges, head_dirs_3d, all_eye_midpoints_3d, adjacency_table, gaze_scale=gaze_scale)
+                plotter.plot(canvas_3d, poses_3d, edges, head_dirs_3d, all_eye_midpoints_3d, adjacency_table, seen_people_adjacency_matrix, gaze_scale=gaze_scale)
             
 
             cv2.imshow(canvas_3d_window_name, canvas_3d)
@@ -328,10 +351,14 @@ if __name__ == '__main__':
                 mean_time = current_time
             else:
                 mean_time = mean_time * 0.95 + current_time * 0.05
-            cv2.putText(frame, 'processing FPS: {}'.format(int(1 / mean_time * 10) / 10),
-                        (40, 80), cv2.FONT_HERSHEY_COMPLEX, 1, (0, 0, 255))
+            cv2.putText(frame, 'Processing FPS: {}'.format(int(1 / mean_time * 10) / 10),
+                        (40, 80), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 0, 255),2)
             cv2.putText(frame, 'Frame number: {}'.format(frame_index),
-                        (40, 120), cv2.FONT_HERSHEY_COMPLEX, 1, (255, 0, 255))
+                        (40, 120), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (255, 0, 255), 2)
+            cv2.putText(frame, '  IN: {}'.format(args.video),
+                        (0, frame.shape[0]-60), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255), 2)
+            cv2.putText(frame, 'OUT: {}'.format(output_file),
+                        (0, frame.shape[0]-20), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255), 2)
             cv2.imshow(window_name_2d, frame)
 
             concat = np.hstack((canvas_3d, frame))

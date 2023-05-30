@@ -36,19 +36,35 @@ while True:
     
     eye_midpoint = (l_eye + r_eye) / 2
     ear_midpoint = (l_ear + r_ear) / 2
-    A = nose - eye_midpoint
-
+    print("eye_midpoint")
+    print(eye_midpoint)
+    print("ear_midpoint")
+    print(ear_midpoint)
     # calculate
     ear_nose = np.vstack((ear_midpoint, nose))
-    eye_parallel_direction = ear_nose[1] - ear_nose[0]
-    eye_parallel = np.vstack((eye_midpoint, eye_midpoint + eye_parallel_direction))
+    print("ear_nose")
+    print(ear_nose)
+    parallel_to_ear_nose_going_through_eye = ear_nose[1] - ear_nose[0]
+    print("eye_parallel_direction")
+    print(parallel_to_ear_nose_going_through_eye)
+    eye_parallel = np.vstack((eye_midpoint, eye_midpoint + parallel_to_ear_nose_going_through_eye))
+    print("eye_parallel")
+    print(eye_parallel)
     ear_eye_direction = eye_midpoint - ear_midpoint
+    print("ear_eye_direction")
+    print(ear_eye_direction)
     ear_eye = np.vstack((ear_midpoint, ear_midpoint + ear_eye_direction))
-
-    eye_parallel_direction_unit = eye_parallel_direction / np.linalg.norm(eye_parallel_direction)
+    print("ear_eye")
+    print(ear_eye)
+    eye_parallel_direction_unit = parallel_to_ear_nose_going_through_eye / np.linalg.norm(parallel_to_ear_nose_going_through_eye)
+    print("eye_parallel_direction_unit")
+    print(eye_parallel_direction_unit)
     ear_eye_direction_unit = ear_eye_direction / np.linalg.norm(ear_eye_direction)
+    print("ear_eye_direction_unit")
+    print(ear_eye_direction_unit)
     gaze_direction_3d = (eye_parallel_direction_unit + ear_eye_direction_unit) / np.linalg.norm(eye_parallel_direction_unit + ear_eye_direction_unit)
-
+    print("gaze_direction_3d")
+    print(gaze_direction_3d)
     ###
     # Define the parameters
     alpha = horizontal_fov / 2  # Angle in radians
