@@ -250,7 +250,7 @@ if __name__ == '__main__':
             plotter.clear(canvas_3d)
             edges = []
             if len(poses_3d):
-                print("############### Frame number: {} ###############".format(frame_index))
+                #print("############### Frame number: {} ###############".format(frame_index))
                 poses_3d = rotate_poses(poses_3d, R, t)
                 poses_3d_copy = poses_3d.copy()
                 x = poses_3d_copy[:, 0::4]
@@ -268,8 +268,8 @@ if __name__ == '__main__':
                 gaze_scale = 100
                 
                 seen_people_adjacency_matrix = np.zeros((poses_3d.shape[0], poses_3d.shape[0]))
-                print("seen_people_matrix")
-                print(seen_people_adjacency_matrix)
+                #print("seen_people_matrix")
+                #print(seen_people_adjacency_matrix)
                 for observer_idx, pose_3d in enumerate(poses_3d):
                     seen_people = []
                     # face_names = ['nose' 1, 'r_eye' 15, 'l_eye' 16, 'r_ear' 17, 'l_ear' 18]
@@ -291,9 +291,9 @@ if __name__ == '__main__':
 
                      
                     for observed_idx, other_pose in enumerate(poses_3d):
-                        print("Observer: {} Observed person: {}".format(observer_idx, observed_idx))
+                        #print("Observer: {} Observed person: {}".format(observer_idx, observed_idx))
                         if observed_idx == observer_idx:
-                            print("SKIPPING: Observer {} cannot observe person {} cause it is him/her -self.".format(observer_idx, observed_idx))
+                            #print("SKIPPING: Observer {} cannot observe person {} cause it is him/her -self.".format(observer_idx, observed_idx))
                             continue
                         is_inside_fov = False
                         point = 0
@@ -303,26 +303,27 @@ if __name__ == '__main__':
                             point = point + 1
 
                         if is_inside_fov == True:
-                            print("Observer: {} sees observed person: {}\n".format(observer_idx, observed_idx))
+                            #print("Observer: {} sees observed person: {}\n".format(observer_idx, observed_idx))
                             seen_people = np.append(seen_people, observed_idx)
                             seen_people_adjacency_matrix[observer_idx, observed_idx] = 1
 
                         else:
-                            print("Observer: {} cannot see person: {}\n".format(observer_idx, observed_idx))
+                            pass
+                            #print("Observer: {} cannot see person: {}\n".format(observer_idx, observed_idx))
 
-                    print("Observer: {} sees people: {}\n".format(observer_idx, seen_people))
+                    #print("Observer: {} sees people: {}\n".format(observer_idx, seen_people))
                     frame_datapoint = [frame_index, observer_idx, midpoint_eyes_3d, head_dir_3d, seen_people]
                     frame_data.append(frame_datapoint)  # Add data to the frame
-                    print("seen_people")
-                    print(seen_people)
+                    #print("seen_people")
+                    #print(seen_people)
 
                 table = tabulate(frame_data, headers, tablefmt='grid')
                 print(table)
                 # Create adjacency table
                 header = ['Observer'] + ['Sees {}'.format(i) for i in range(poses_3d.shape[0])]
-                print("seen_people_adjacency_matrix")
-                print(seen_people_adjacency_matrix)
-                print(type(seen_people_adjacency_matrix))
+                #print("seen_people_adjacency_matrix")
+                #print(seen_people_adjacency_matrix)
+                #print(type(seen_people_adjacency_matrix))
                 rows = []
                 for observer_idx in range(poses_3d.shape[0]):
                     row = [observer_idx] + [seen_people_adjacency_matrix[observer_idx][i] for i in range(poses_3d.shape[0])]
@@ -378,7 +379,7 @@ if __name__ == '__main__':
                 while (key != p_code
                     and key != esc_code
                     and key != space_code):
-                    fov_pyramids = plotter.plot(canvas_3d, poses_3d, edges, head_dirs_3d, all_eye_midpoints_3d, all_eyes_3d, gaze_scale=100)
+                    plotter.plot(canvas_3d, poses_3d, edges, head_dirs_3d, all_eye_midpoints_3d, adjacency_table, seen_people_adjacency_matrix, gaze_scale=gaze_scale)
                     cv2.imshow(canvas_3d_window_name, canvas_3d)
                     key = cv2.waitKey(33)
                 if key == esc_code:

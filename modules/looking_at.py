@@ -1,5 +1,5 @@
 import numpy as np
-# import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 
 def point_in_cone(cone_vertex, cone_axis, cone_angle, point, gaze_scale=100):
     # Step 1: Define the unit vector along the cone axis
@@ -26,7 +26,7 @@ def point_in_cone(cone_vertex, cone_axis, cone_angle, point, gaze_scale=100):
 
     else:
         return False  # Point is outside the cone
-
+"""
 def set_axes_equal(ax):
     limits = np.array([
         ax.get_xlim3d(),
@@ -58,7 +58,7 @@ def plot_cone(ax, cone_vertex, cone_axis, cone_angle, num_points=100):
     x = cone_vertex[0] + np.cos(theta) * np.sin(cone_angle) * cone_axis[0]
     y = cone_vertex[1] + np.cos(theta) * np.sin(cone_angle) * cone_axis[1]
     z = cone_vertex[2] + np.cos(theta) * np.sin(cone_angle) * cone_axis[2]
-"""
+
     # Plot the cone surface
     ax.plot3D(x, y, z, 'b-', alpha=0.3)
 
@@ -115,5 +115,4 @@ set_axes_equal(ax)
 
 # Display the plot
 plt.show()
-
 """

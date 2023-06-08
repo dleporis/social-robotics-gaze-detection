@@ -1,6 +1,99 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+
+def set_axes_equal(ax):
+    limits = np.array([
+        ax.get_xlim3d(),
+        ax.get_ylim3d(),
+        ax.get_zlim3d(),
+    ])
+    origin = np.mean(limits, axis=1)
+    radius = 0.5 * np.max(np.abs(limits[:, 1] - limits[:, 0]))
+    _set_axes_radius(ax, origin, radius)
+
+def _set_axes_radius(ax, origin, radius):
+    x, y, z = origin
+    ax.set_xlim3d([x - radius, x + radius])
+    ax.set_ylim3d([y - radius, y + radius])
+    ax.set_zlim3d([z - radius, z + radius])
+
+def rotation_matrix(axis, angle):
+    """
+    Generate a rotation matrix for a rotation around the given axis by the specified angle.
+    """
+    axis = np.asarray(axis)
+    axis = axis / np.linalg.norm(axis)
+    a = np.cos(angle / 2.0)
+    b, c, d = -axis * np.sin(angle / 2.0)
+    return np.array([[a*a + b*b - c*c - d*d, 2 * (b*c - a*d), 2 * (b*d + a*c)],
+                     [2 * (b*c + a*d), a*a + c*c - b*b - d*d, 2 * (c*d - a*b)],
+                     [2 * (b*d - a*c), 2 * (c*d + a*b), a*a + d*d - b*b - c*c]])
+
+def point_in_cone(cone_vertex, cone_axis, cone_angle, point):
+    # Step 1: Define the unit vector along the cone axis
+    axis_vector_magnitude = np.sqrt(cone_axis.dot(cone_axis))
+    axis_unit_vector = cone_axis / axis_vector_magnitude
+
+    # Step 2: Define vector point_vector and normalize it
+    point_vector = point - cone_vertex
+    point_vector_magnitude = np.sqrt(point_vector.dot(point_vector))
+    if point_vector_magnitude == 0:
+        return True # Point is inside the cone
+    point_unit_vector = point_vector / point_vector_magnitude
+
+    # Step 3: Calculate the dot product
+    dot_product = np.dot(point_unit_vector, axis_unit_vector)
+
+    # Step 4: Calculate the angle and compare with the cone angle
+    angle = np.arccos(dot_product)
+
+    if angle <= cone_angle and point_vector_magnitude <= axis_vector_magnitude:
+
+        return True  # Point is inside the cone
+
+    else:
+        return False  # Point is outside the cone
+
+def plot_circle_and_vector(origin, gaze_end, resolution, radius, ax):
+    # Define the gaze direction vector
+    gaze_direction = gaze_end - origin
+
+    # Normalize the gaze direction vector
+    gaze_direction_norm = gaze_direction / np.linalg.norm(gaze_direction)
+
+    # Generate points for the base circle centered at the origin
+    theta = np.linspace(0, 2 * np.pi, resolution)
+    circle_points = np.column_stack([radius * np.cos(theta), radius * np.sin(theta), np.zeros_like(theta)])
+
+    # Calculate the rotation axis and angle to align the circle with gaze_direction
+    rotation_axis = np.cross([0, 0, 1], gaze_direction_norm)
+    rotation_angle = np.arccos(np.dot([0, 0, 1], gaze_direction_norm))
+
+    # Apply the rotation to the circle points
+    rotated_circle_points = np.dot(circle_points, rotation_matrix(rotation_axis, rotation_angle))
+
+    # Translate the circle points to align with gaze_end
+    translated_circle_points = rotated_circle_points + gaze_end
+
+    # Plot the base circle and the gaze direction vector
+    
+    ax.plot(translated_circle_points[:, 0], translated_circle_points[:, 1], translated_circle_points[:, 2], 'b-', label="cone base")
+    ax.quiver(origin[0], origin[1], origin[2], gaze_direction[0], gaze_direction[1], gaze_direction[2], color='r',label="gaze_direction")
+    """
+    # Set plot limits and labels
+    max_range = np.array([translated_circle_points[:, 0].max() - translated_circle_points[:, 0].min(),
+                          translated_circle_points[:, 1].max() - translated_circle_points[:, 1].min(),
+                          translated_circle_points[:, 2].max() - translated_circle_points[:, 2].min()]).max() / 2.0
+    mid_x = (translated_circle_points[:, 0].max() + translated_circle_points[:, 0].min()) * 0.5
+    mid_y = (translated_circle_points[:, 1].max() + translated_circle_points[:, 1].min()) * 0.5
+    mid_z = (translated_circle_points[:, 2].max() + translated_circle_points[:, 2].min()) * 0.5
+    ax.set_xlim(mid_x - max_range, mid_x + max_range)
+    ax.set_ylim(mid_y - max_range, mid_y + max_range)
+    ax.set_zlim(mid_z - max_range, mid_z + max_range)
+    """
+    
+
 def apply_random_transformation(points):
     # Generate random rotation matrix
     rotation_matrix = np.random.rand(3, 3)
@@ -27,13 +120,34 @@ l_ear = np.array([l_eye[0] + 4, 9, -2])
 r_ear = np.array([r_eye[0] - 4, 9, -2])
 
 # Define the field of view (FOV)
-horizontal_fov = np.deg2rad(120)  # Convert to radians
-vertical_fov = np.deg2rad(60)
+fov = np.deg2rad(120)  # Convert to radians
 
 while True:
-    #all_points = [l_eye, r_eye, nose, l_ear, r_ear]
-    #l_eye, r_eye, nose, l_ear, r_ear = apply_random_transformation(all_points)
+    all_points = [l_eye, r_eye, nose, l_ear, r_ear]
+    l_eye, r_eye, nose, l_ear, r_ear = apply_random_transformation(all_points)
     
+
+    """
+    eye_midpoint = (l_eye + r_eye) / 2
+    ear_midpoint = (l_ear + r_ear) / 2
+    A = nose - eye_midpoint
+
+    # calculate
+    ear_nose = np.vstack((ear_midpoint, nose))
+    eye_parallel_direction = ear_nose[1] - ear_nose[0]
+    eye_parallel = np.vstack((eye_midpoint, eye_midpoint + eye_parallel_direction))
+    ear_eye_direction = eye_midpoint - ear_midpoint
+    ear_eye = np.vstack((ear_midpoint, ear_midpoint + ear_eye_direction))
+
+    eye_parallel_direction_unit = eye_parallel_direction / np.linalg.norm(eye_parallel_direction)
+    ear_eye_direction_unit = ear_eye_direction / np.linalg.norm(ear_eye_direction)
+    gaze_direction_3d = (eye_parallel_direction_unit + ear_eye_direction_unit) / np.linalg.norm(eye_parallel_direction_unit + ear_eye_direction_unit)
+    gaze_direction_3d_length = np.linalg.norm(gaze_direction_3d)
+    print("gaze_direction_3d_length")
+    print(gaze_direction_3d_length)
+
+    """
+
     eye_midpoint = (l_eye + r_eye) / 2
     ear_midpoint = (l_ear + r_ear) / 2
     print("eye_midpoint")
@@ -41,118 +155,65 @@ while True:
     print("ear_midpoint")
     print(ear_midpoint)
     # calculate
-    ear_nose = np.vstack((ear_midpoint, nose))
+    ear_nose = nose - ear_midpoint
     print("ear_nose")
     print(ear_nose)
-    parallel_to_ear_nose_going_through_eye = ear_nose[1] - ear_nose[0]
-    print("eye_parallel_direction")
-    print(parallel_to_ear_nose_going_through_eye)
-    eye_parallel = np.vstack((eye_midpoint, eye_midpoint + parallel_to_ear_nose_going_through_eye))
-    print("eye_parallel")
-    print(eye_parallel)
-    ear_eye_direction = eye_midpoint - ear_midpoint
-    print("ear_eye_direction")
-    print(ear_eye_direction)
-    ear_eye = np.vstack((ear_midpoint, ear_midpoint + ear_eye_direction))
+    ear_eye = eye_midpoint - ear_midpoint
     print("ear_eye")
     print(ear_eye)
-    eye_parallel_direction_unit = parallel_to_ear_nose_going_through_eye / np.linalg.norm(parallel_to_ear_nose_going_through_eye)
-    print("eye_parallel_direction_unit")
-    print(eye_parallel_direction_unit)
-    ear_eye_direction_unit = ear_eye_direction / np.linalg.norm(ear_eye_direction)
-    print("ear_eye_direction_unit")
-    print(ear_eye_direction_unit)
-    gaze_direction_3d = (eye_parallel_direction_unit + ear_eye_direction_unit) / np.linalg.norm(eye_parallel_direction_unit + ear_eye_direction_unit)
+
+    ear_nose_unit = ear_nose / np.linalg.norm(ear_nose)
+    print("ear_nose_unit")
+    print(ear_nose_unit)
+    ear_eye_unit = ear_eye / np.linalg.norm(ear_eye)
+    print("ear_eye_unit")
+    print(ear_eye_unit)
+    gaze_direction_3d = (ear_nose_unit + ear_eye_unit) / np.linalg.norm(ear_nose_unit + ear_eye_unit)
     print("gaze_direction_3d")
     print(gaze_direction_3d)
     ###
     # Define the parameters
-    alpha = horizontal_fov / 2  # Angle in radians
-    beta = vertical_fov /2  # Angle in radians
-    length_centroid = np.linalg.norm(gaze_direction_3d)
+    alpha = fov / 2  # Angle in radians
+    scale = 100
+    gaze_direction_3d_scaled = gaze_direction_3d * scale
+    length_centroid = np.linalg.norm(gaze_direction_3d_scaled)
     print("length_centroid")
     print(length_centroid)
-    base_side_a = np.tan(alpha) * length_centroid * 2
-    base_side_b = np.tan(beta) * length_centroid * 2
-    print("base_side_a")
-    print(base_side_a)
-    print("base_side_b")
-    print(base_side_b)
 
     # Calculate the base center
-    base_center = eye_midpoint + gaze_direction_3d
+    base_center = eye_midpoint + gaze_direction_3d_scaled
     print(base_center)
     base_points = np.zeros((4, 3))
     
-    # 1 Calculate the direction of the line
-    base_h_direction = l_eye - r_eye
-
-    # Calculate the normalized direction of the line
-    base_h_direction_unit = base_h_direction / np.linalg.norm(base_h_direction)
-
-    # Calculate the line segment
-    base_h = np.vstack((base_center, base_center + base_h_direction_unit))
-
-    # 2 Calculate the normal vector of the plane
-    base_normal = gaze_direction_3d
-
-    # Define a point on the plane (base_h_point can be used)
-    base_point = base_h[0]
-
-    # Define the plane by its normal and a point on the plane
-    base_plane = (base_normal, base_point)
-
-    # 3
-    # Calculate the cross product of base_h_direction_unit and base_normal to get base_v_direction
-    base_v_direction = np.cross(base_h_direction_unit, base_normal)
-
-    # Calculate the normalized direction of the line
-    base_v_direction_unit = base_v_direction / np.linalg.norm(base_v_direction)
-
-    # Calculate the line segment
-    base_v = np.vstack((base_center, base_center + base_v_direction_unit))
-
+    resolution = 9
+    radius = np.tan(alpha) * length_centroid
 
     # Create the 3D plot
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
 
-    # 4
-    # Plot the base plane
-    base_origin = base_plane[1]
-    base_normal_scaled = base_plane[0] * 10  # Scaling the normal vector for visualization
-    base_points = np.array([base_origin - base_normal_scaled, base_origin + base_normal_scaled])
-    ax.plot(*base_points.T, color='cyan', label='base')
 
-    # Plot the base_h line segment
-    ax.plot(*base_h.T, color='red', label='base_h')
+    plot_circle_and_vector(eye_midpoint, base_center, resolution, radius, ax)
 
-    # Plot the base_v line segment
-    ax.plot(*base_v.T, color='green', label='base_v')
-    # 5 Calculate the corners of the base rectangle
-    corner_1 = base_center + 0.5 * base_side_a * base_h_direction_unit + 0.5 * base_side_b * base_v_direction_unit
-    corner_2 = base_center - 0.5 * base_side_a * base_h_direction_unit + 0.5 * base_side_b * base_v_direction_unit
-    corner_3 = base_center - 0.5 * base_side_a * base_h_direction_unit - 0.5 * base_side_b * base_v_direction_unit
-    corner_4 = base_center + 0.5 * base_side_a * base_h_direction_unit - 0.5 * base_side_b * base_v_direction_unit
+    # Generate points and check if they are inside the cone
+    for x in range(-500, 500, 20):
+        for y in range(-500, 500, 20):
+            for z in range(-500, 500, 20):
+                pose_edge = np.array([[10, -2, 10],
+                                    [x, y, z]])
+                is_inside =  point_in_cone(eye_midpoint, gaze_direction_3d_scaled, alpha, pose_edge[1])
 
-    # Define the base rectangle by its corners
-    base_rectangle = np.vstack((corner_1, corner_2, corner_3, corner_4, corner_1))
-
-    # 6 # Plot the base_rectangle
-    ax.plot(*base_rectangle.T, color='blue', label='base_rectangle')
-
-    # Plot lines from eye_midpoint to base_rectangle vertices
-    ax.plot([eye_midpoint[0], corner_1[0]], [eye_midpoint[1], corner_1[1]], [eye_midpoint[2], corner_1[2]], color='magenta')
-    ax.plot([eye_midpoint[0], corner_2[0]], [eye_midpoint[1], corner_2[1]], [eye_midpoint[2], corner_2[2]], color='magenta')
-    ax.plot([eye_midpoint[0], corner_3[0]], [eye_midpoint[1], corner_3[1]], [eye_midpoint[2], corner_3[2]], color='magenta')
-    ax.plot([eye_midpoint[0], corner_4[0]], [eye_midpoint[1], corner_4[1]], [eye_midpoint[2], corner_4[2]], color='magenta')
+                x_coord = pose_edge[1, 0]
+                y_coord = pose_edge[1, 1]
+                z_coord = pose_edge[1, 2]
+                if is_inside:
+                    ax.scatter3D(x_coord, y_coord, z_coord, c='green')
+                    print(str(pose_edge[1]) + " is inside the fov cone: " + str(is_inside))
+                else:
+                    pass
+                    #ax.scatter3D(x_coord, y_coord, z_coord, c='red', label='Pose Vertex')
 
     
-    # Define the line parallel to l_eye - r_eye line and perpendicular to gaze_direction_3d
-    #line_parallel = np.vstack((eye_midpoint - 0.5 * (l_eye - r_eye), eye_midpoint + 0.5 * (l_eye - r_eye)))
-    #line_perpendicular = np.vstack((base_center - 0.5 * length_centroid * gaze_direction_3d, base_center + 0.5 * length_centroid * gaze_direction_3d))
-
-
     # Plot the points
     ax.scatter(l_eye[0], l_eye[1], l_eye[2], color='red', label='l_eye')
     ax.scatter(r_eye[0], r_eye[1], r_eye[2], color='green', label='r_eye')
@@ -161,15 +222,18 @@ while True:
     ax.scatter(r_ear[0], r_ear[1], r_ear[2], color='purple', label='r_ear')
 
     # Set plot limits and labels
-    ax.set_xlim([-20, 20])
-    ax.set_ylim([-20, 20])
-    ax.set_zlim([-20, 20])
+    ax.set_xlim([-200, 200])
+    ax.set_ylim([-200, 200])
+    ax.set_zlim([-200, 200])
     ax.set_xlabel('X')
     ax.set_ylabel('Y')
     ax.set_zlabel('Z')
 
     # Add legend
     ax.legend()
+    # Set plot aspect ratio and equal scale for all axes
+    ax.set_box_aspect([1, 1, 1])
+    set_axes_equal(ax)
 
     # Show the plot
     plt.show()

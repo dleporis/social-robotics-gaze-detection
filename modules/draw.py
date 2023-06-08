@@ -2,7 +2,7 @@ import math
 
 import cv2
 import numpy as np
-from PIL import Image, ImageFont, ImageDraw
+#from PIL import Image, ImageFont, ImageDraw
 import contextlib
 import networkx as nx
 
@@ -69,14 +69,14 @@ class Plotter3d:
     def _plot_gaze(self, img, gaze_direction_vectors, gaze_origins, gaze_scale, R):
         for idx, gaze_origin in enumerate(gaze_origins):
             gaze_dir_vectors_magnitude = np.linalg.norm(gaze_direction_vectors[idx])
-            print("gaze_dir_vectors_magnitude")
-            print(gaze_dir_vectors_magnitude)
+            #print("gaze_dir_vectors_magnitude")
+            #print(gaze_dir_vectors_magnitude)
             gaze_end = gaze_origin + gaze_direction_vectors[idx] * gaze_scale
             gaze_direction_vector_scaled = gaze_origin-gaze_end
             gaze_magnitude = np.linalg.norm(gaze_direction_vector_scaled)
             gaze_direction_norm = gaze_direction_vectors[idx] / gaze_magnitude
-            print("gaze_magnitude")
-            print(gaze_magnitude)
+            #print("gaze_magnitude")
+            #print(gaze_magnitude)
             #print("self.cone_angle")
             #print(self.cone_angle)
             """
@@ -343,19 +343,6 @@ class Plotter3d:
             cv2.arrowedLine(graph_image, start_point, end_point, self.person_colors[start_node % len(self.person_colors)], 2, tipLength=0.25)
 
         for node, position in layout.items():
-            if math.isnan(scale_factor):
-                print("IS NAN\nIS NAN\nIS NAN\nIS NAN\nIS NAN\nIS NAN\nIS NAN\nIS NAN\nIS NAN\nIS NAN\nIS NAN\nIS NAN\nIS NAN\nIS NAN\nIS NAN\nIS NAN\nIS NAN\nIS NAN\nIS NAN\nIS NAN\nIS NAN\nIS NAN\nIS NAN\nIS NAN\nIS NAN\nIS NAN\nIS NAN\nIS NAN\nIS NAN\nIS NAN\nIS NAN\nIS NAN\nIS NAN\nIS NAN\nIS NAN\nIS NAN\n")
-                continue
-            print("position[0]")
-            print(position[0])
-            print("position[1]")
-            print(position[1])
-            print("scale_factor")
-            print(scale_factor)
-            print("graph_image_size[0]")
-            print(graph_image_size[0])
-            print("graph_image_size[1]")
-            print(graph_image_size[1])
             center = (int(position[0] * scale_factor + graph_image_size[0] / 2),
                     int(position[1] * scale_factor + graph_image_size[1] / 2))
             cv2.circle(graph_image, center, 10, self.person_colors[node % len(self.person_colors)], -1)
