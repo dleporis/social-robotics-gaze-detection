@@ -137,6 +137,14 @@ def finish(input, output, o_file, log_file):
     cv2.destroyAllWindows()
     print("Output: {}\nLog: {}".format(o_file, log_file))
 
+def create_file(filename):
+    try:
+        with open(filename, 'w'):
+            pass  # An empty block to indicate no content needs to be written
+        print("File created successfully:", filename)
+    except IOError:
+        print("An error occurred while creating the file.")
+
 
 if __name__ == '__main__':
     parser = ArgumentParser(description='Lightweight 3D human pose estimation demo. '
@@ -221,6 +229,7 @@ if __name__ == '__main__':
         fourcc = cv2.VideoWriter_fourcc(*'mp4v')
         video_out = cv2.VideoWriter(output_file, fourcc, 30.0, (width_video_in+canvas_3d.shape[1], height_video_in))
         # Set up logging
+        create_file(logging_file)
         logging.basicConfig(filename=logging_file, level=logging.INFO)
         headers = ['Frame', 'Person ID', 'midpoint_eyes_3d', "head_dir_3d", "sees_people"]
         is_video = True

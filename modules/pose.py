@@ -30,9 +30,18 @@ class Pose:
             found_kpt_id += 1
         self.bbox = cv2.boundingRect(found_keypoints)
         self.id = None
-        self.translation_filter = [OneEuroFilter(freq=80, beta=0.01),
-                                   OneEuroFilter(freq=80, beta=0.01),
-                                   OneEuroFilter(freq=80, beta=0.01)]
+        
+        #freq=80
+        freq =30
+
+        mincutoff=5
+        
+        beta=1
+
+        dcutoff=10
+        self.translation_filter = [OneEuroFilter(freq=freq, mincutoff=mincutoff, beta=beta, dcutoff=dcutoff),
+                                   OneEuroFilter(freq=freq, mincutoff=mincutoff, beta=beta, dcutoff=dcutoff),
+                                   OneEuroFilter(freq=freq, mincutoff=mincutoff, beta=beta, dcutoff=dcutoff)]
 
     def update_id(self, id=None):
         self.id = id
